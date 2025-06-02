@@ -1,0 +1,4 @@
+db:
+  url: jdbc:sqlserver://LAPTOP-RT1ETNCP\\LYDUYBACH:1433;databaseName=testhi;encrypt=true;trustServerCertificate=true
+  username: sa
+  password: bach2612
