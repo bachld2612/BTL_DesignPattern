@@ -10,13 +10,13 @@ public class DBConfig {
     private static String password;
 
     static {
-        try (InputStream in = DBConfig.class.getResourceAsStream("/db.properties")) {
+        try (InputStream in = DBConfig.class.getResourceAsStream("/db.yml")) {
             Properties props = new Properties();
             props.load(in);
 
-            url = props.getProperty("db.url");
-            username = props.getProperty("db.username");
-            password = props.getProperty("db.password");
+            url = props.getProperty("url");
+            username = props.getProperty("username");
+            password = props.getProperty("password");
         } catch (Exception e) {
             e.printStackTrace();
             // Nếu muốn, có thể throw RuntimeException để developer biết ngay.

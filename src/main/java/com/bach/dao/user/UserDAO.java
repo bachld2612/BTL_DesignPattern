@@ -12,7 +12,7 @@ public class UserDAO {
 
     public List<User> getUsers(){
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM [User]";
+        String sql = "SELECT * FROM users";
 
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
