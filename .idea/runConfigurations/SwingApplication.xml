@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SwingApplication" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="com.bach.SwingApplication" />
+    <module name="yml" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
