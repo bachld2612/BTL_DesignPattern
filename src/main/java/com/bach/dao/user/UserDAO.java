@@ -12,7 +12,7 @@ public class UserDAO {
 
     public List<User> getUsers(){
         List<User> users = new ArrayList<>();
-        String sql = "SELECT * FROM users";
+        String sql = "SELECT * FROM admin";
 
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql);
@@ -20,7 +20,7 @@ public class UserDAO {
 
             while (rs.next()) {
                 User u = new User();
-                u.setId(rs.getInt("Id"));
+                u.setId(rs.getInt("id_admin"));
                 users.add(u);
             }
         } catch (SQLException e) {

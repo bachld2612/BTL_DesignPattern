@@ -10,7 +10,8 @@ public class ConnectionManager {
 
     static {
         try {
-            Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
+            // MySQL JDBC driver
+            Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
@@ -31,5 +32,4 @@ public class ConnectionManager {
             } catch (Exception ignored) {}
         }
     }
-
 }
