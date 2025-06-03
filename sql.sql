@@ -1,12 +1,6 @@
 -- Tạo database nếu chưa tồn tại
-IF NOT EXISTS (SELECT * FROM sys.databases WHERE name = 'cvdtt')
-BEGIN
-    CREATE DATABASE [cvdtt];
-END
-GO
-
-USE [cvdtt];
-GO
+CREATE DATABASE IF NOT EXISTS cvdtt;
+USE cvdtt;
 
 -- Bảng admin
 CREATE TABLE admin (
@@ -17,7 +11,6 @@ CREATE TABLE admin (
                        phone VARCHAR(15),
                        role VARCHAR(50)
 );
-GO
 
 -- Bảng suppliers
 CREATE TABLE suppliers (
@@ -29,10 +22,8 @@ CREATE TABLE suppliers (
                            phone VARCHAR(15),
                            start_date DATE,
                            end_date DATE,
-                           CONSTRAINT fk_suppliers_admin
-                               FOREIGN KEY (id_admin) REFERENCES admin(id_admin)
+                           FOREIGN KEY (id_admin) REFERENCES admin(id_admin)
 );
-GO
 
 -- Bảng customers
 CREATE TABLE customers (
@@ -44,7 +35,6 @@ CREATE TABLE customers (
                            address TEXT,
                            date_of_birth DATE
 );
-GO
 
 -- Bảng products
 CREATE TABLE products (
@@ -55,12 +45,9 @@ CREATE TABLE products (
                           price DECIMAL(10, 2),
                           state VARCHAR(20),
                           id_admin INT,
-                          CONSTRAINT fk_products_admin
-                              FOREIGN KEY (id_admin) REFERENCES admin(id_admin),
-                          CONSTRAINT fk_products_suppliers
-                              FOREIGN KEY (id_suppliers) REFERENCES suppliers(id_suppliers)
+                          FOREIGN KEY (id_admin) REFERENCES admin(id_admin),
+                          FOREIGN KEY (id_suppliers) REFERENCES suppliers(id_suppliers)
 );
-GO
 
 -- Bảng events
 CREATE TABLE events (
@@ -70,31 +57,24 @@ CREATE TABLE events (
                         start_date DATE,
                         end_date DATE,
                         content TEXT,
-                        CONSTRAINT fk_events_admin
-                            FOREIGN KEY (id_admin) REFERENCES admin(id_admin)
+                        FOREIGN KEY (id_admin) REFERENCES admin(id_admin)
 );
-GO
 
 -- Bảng carts
 CREATE TABLE carts (
                        id_carts INT PRIMARY KEY,
                        id_customers INT,
-                       CONSTRAINT fk_carts_customers
-                           FOREIGN KEY (id_customers) REFERENCES customers(id_customers)
+                       FOREIGN KEY (id_customers) REFERENCES customers(id_customers)
 );
-GO
 
 -- Bảng product_carts
 CREATE TABLE product_carts (
                                id_carts INT,
                                id_product INT,
                                PRIMARY KEY (id_carts, id_product),
-                               CONSTRAINT fk_product_carts_carts
-                                   FOREIGN KEY (id_carts) REFERENCES carts(id_carts),
-                               CONSTRAINT fk_product_carts_products
-                                   FOREIGN KEY (id_product) REFERENCES products(id_products)
+                               FOREIGN KEY (id_carts) REFERENCES carts(id_carts),
+                               FOREIGN KEY (id_product) REFERENCES products(id_products)
 );
-GO
 
 -- Bảng bookings
 CREATE TABLE bookings (
@@ -105,12 +85,9 @@ CREATE TABLE bookings (
                           end_date DATE,
                           status VARCHAR(20),
                           amount DECIMAL(10, 2),
-                          CONSTRAINT fk_bookings_customers
-                              FOREIGN KEY (id_customers) REFERENCES customers(id_customers),
-                          CONSTRAINT fk_bookings_carts
-                              FOREIGN KEY (id_carts) REFERENCES carts(id_carts)
+                          FOREIGN KEY (id_customers) REFERENCES customers(id_customers),
+                          FOREIGN KEY (id_carts) REFERENCES carts(id_carts)
 );
-GO
 
 -- Bảng earning_cards
 CREATE TABLE earning_cards (
@@ -118,10 +95,8 @@ CREATE TABLE earning_cards (
                                id_customers INT,
                                amount DECIMAL(10, 2),
                                card_class INT,
-                               CONSTRAINT fk_earning_cards_customers
-                                   FOREIGN KEY (id_customers) REFERENCES customers(id_customers)
+                               FOREIGN KEY (id_customers) REFERENCES customers(id_customers)
 );
-GO
 
 -- Bảng buy_bills
 CREATE TABLE buy_bills (
@@ -130,22 +105,17 @@ CREATE TABLE buy_bills (
                            amount DECIMAL(10, 2),
                            buy_date DATE,
                            state VARCHAR(50),
-                           CONSTRAINT fk_buy_bills_admin
-                               FOREIGN KEY (id_admin) REFERENCES admin(id_admin)
+                           FOREIGN KEY (id_admin) REFERENCES admin(id_admin)
 );
-GO
 
 -- Bảng buy_bill_products
 CREATE TABLE buy_bill_products (
                                    id_product INT,
                                    id_buy_bills INT,
                                    PRIMARY KEY (id_product, id_buy_bills),
-                                   CONSTRAINT fk_buy_bill_products_products
-                                       FOREIGN KEY (id_product) REFERENCES products(id_products),
-                                   CONSTRAINT fk_buy_bill_products_buy_bills
-                                       FOREIGN KEY (id_buy_bills) REFERENCES buy_bills(id_buy_bills)
+                                   FOREIGN KEY (id_product) REFERENCES products(id_products),
+                                   FOREIGN KEY (id_buy_bills) REFERENCES buy_bills(id_buy_bills)
 );
-GO
 
 -- Bảng orders
 CREATE TABLE orders (
@@ -156,10 +126,8 @@ CREATE TABLE orders (
                         status VARCHAR(50),
                         payment_method VARCHAR(50),
                         note TEXT,
-                        CONSTRAINT fk_orders_bookings
-                            FOREIGN KEY (id_bookings) REFERENCES bookings(id_bookings)
+                        FOREIGN KEY (id_bookings) REFERENCES bookings(id_bookings)
 );
-GO
 
 -- Bảng vouchers
 CREATE TABLE vouchers (
@@ -169,14 +137,11 @@ CREATE TABLE vouchers (
                           name_vouchers VARCHAR(100),
                           start_value DECIMAL(10, 2),
                           end_value DECIMAL(10, 2),
-                          is_active BIT,
+                          is_active BOOLEAN,
                           code VARCHAR(20),
-                          CONSTRAINT fk_vouchers_admin
-                              FOREIGN KEY (id_admin) REFERENCES admin(id_admin),
-                          CONSTRAINT fk_vouchers_orders
-                              FOREIGN KEY (id_order) REFERENCES orders(id_orders)
+                          FOREIGN KEY (id_admin) REFERENCES admin(id_admin),
+                          FOREIGN KEY (id_order) REFERENCES orders(id_orders)
 );
-GO
 
 -- Bảng sales_bills
 CREATE TABLE sales_bills (
@@ -185,7 +150,5 @@ CREATE TABLE sales_bills (
                              amount INT,
                              booking_date DATE,
                              state VARCHAR(50),
-                             CONSTRAINT fk_sales_bills_orders
-                                 FOREIGN KEY (id_orders) REFERENCES orders(id_orders)
+                             FOREIGN KEY (id_orders) REFERENCES orders(id_orders)
 );
-GO
