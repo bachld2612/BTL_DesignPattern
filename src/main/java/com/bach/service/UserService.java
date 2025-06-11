@@ -26,9 +26,11 @@ public class UserService {
             }
             Session.getInstance().setUsername(customer.getUsername());
             Session.getInstance().setRole("customer");
+            Session.getInstance().setId(customer.getId());
         }else {
             Session.getInstance().setUsername(admin.getUsername());
             Session.getInstance().setRole("admin");
+            Session.getInstance().setId(admin.getId());
         }
     }
 

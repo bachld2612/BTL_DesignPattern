@@ -26,7 +26,7 @@ public class LoginController {
         String password = loginView.getPassword();
         try{
             userService.login(username, password);
-            loginView.showMessage("Login successful with role: " + Session.getInstance().getRole());
+            loginView.showMessage("Login successful with role: " + Session.getInstance().getRole() + " id: " + Session.getInstance().getId());
         }catch (RuntimeException e) {
             loginView.showError(e.getMessage());
         }

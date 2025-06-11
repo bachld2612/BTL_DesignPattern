@@ -8,16 +8,26 @@ public class Session {
     private String username;
     private LocalDateTime cratedAt;
     private String role;
+    private int id;
     private static Session instance;
 
-    private Session(String username, String role) {
+    private Session(String username, String role, int id) {
         this.role = role;
         this.username = username;
+        this.id = id;
         this.cratedAt = LocalDateTime.now();
     }
 
     public String getUsername() {
         return username;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public Session() {
