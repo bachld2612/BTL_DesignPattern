@@ -10,7 +10,6 @@ public class ConnectionManager {
 
     static {
         try {
-            // MySQL JDBC driver
             Class.forName("com.mysql.cj.jdbc.Driver");
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
