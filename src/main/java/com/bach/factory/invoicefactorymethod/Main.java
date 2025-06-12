@@ -8,14 +8,14 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("=== CREATE SALES INVOICE ===");
-        System.out.print("Invoice ID: "); int salesId = scanner.nextInt();
+//        System.out.print("Invoice ID: "); int salesId = scanner.nextInt();
         System.out.print("Order ID: "); int orderId = scanner.nextInt();
         System.out.print("Quantity: "); int quantity = scanner.nextInt(); scanner.nextLine();
         System.out.print("Booking Date: "); String bookingDate = scanner.nextLine();
         System.out.print("Status: "); String salesStatus = scanner.nextLine();
 
         InvoiceFactory salesFactory = new SalesInvoiceFactory();
-        Invoice salesInvoice = salesFactory.createInvoice(salesId, orderId, quantity, bookingDate, salesStatus);
+        Invoice salesInvoice = salesFactory.createInvoice(orderId, quantity, bookingDate, salesStatus);
         try {
             salesInvoice.saveToDatabase();
             salesInvoice.displayInvoice();

@@ -16,49 +16,58 @@ public class SalesInvoice implements Invoice {
 
     public SalesInvoice() {}
 
-    public SalesInvoice(int invoiceId, int orderId, int quantity, String bookingDate, String status) {
-        this.invoiceId = invoiceId;
+    public SalesInvoice( int orderId, int quantity, String bookingDate, String status) {
         this.orderId = orderId;
         this.quantity = quantity;
         this.bookingDate = bookingDate;
         this.status = status;
     }
     @Override
-    public void saveToDatabase() throws SQLException {
+    public boolean saveToDatabase() throws SQLException {
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(
-                     "INSERT INTO sales_bills (id_sales_bills, id_orders, amount, booking_date, state) VALUES (?, ?, ?, ?, ?)")) {
-            stmt.setInt(1, invoiceId);
-            stmt.setInt(2, orderId);
-            stmt.setInt(3, quantity);
-            stmt.setString(4, bookingDate);
-            stmt.setString(5, status);
+                     "INSERT INTO sales_bills (id_orders, amount, booking_date, state) VALUES (?, ?, ?, ?)")) {
+            stmt.setInt(1, orderId);
+            stmt.setInt(2, quantity);
+            stmt.setString(3, bookingDate);
+            stmt.setString(4, status);
             stmt.executeUpdate();
             System.out.println("Sales invoice saved to database.");
         }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public void loadFromDatabase(int id) throws SQLException {
+    public String exportInvoice(int id) throws SQLException {
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement("SELECT * FROM sales_bills WHERE id_sales_bills = ?")) {
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                this.invoiceId = rs.getInt("id_sales_bills");
-                this.orderId = rs.getInt("id_orders");
-                this.quantity = rs.getInt("amount");
-                this.bookingDate = rs.getString("booking_date");
-                this.status = rs.getString("state");
+                return "ID: " + rs.getInt("id_sales_bills") +
+                        "\nOrder ID: " + rs.getInt("id_orders") +
+                        "\nAmount: " + rs.getInt("amount") +
+                        "\nBooking Date: " + rs.getString("booking_date") +
+                        "\nStatus: " + rs.getString("state");
             } else {
-                throw new SQLException("Sales invoice not found with ID: " + id);
+                return "Không tìm thấy hóa đơn với ID này.";
             }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return "Lỗi khi tìm hóa đơn: " + e.getMessage();
         }
     }
 
     @Override
-    public void displayInvoice() {
-        System.out.printf("Sales Invoice - ID: %d, Order ID: %d, Quantity: %d, Booking Date: %s, Status: %s\n",
-                invoiceId, orderId, quantity, bookingDate, status);
+    public String displayInvoice() {
+        return String.format(
+                "Sales Invoice - ID: %d\nOrder ID: %d\nQuantity: %d\nBooking Date: %s\nStatus: %s",
+                invoiceId, orderId, quantity, bookingDate, status
+        );
     }
 }

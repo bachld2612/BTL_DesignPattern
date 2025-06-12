@@ -16,8 +16,7 @@ public class PurchaseInvoice implements Invoice {
 
     public PurchaseInvoice() {}
 
-    public PurchaseInvoice(int invoiceId, int adminId, double amount, String purchaseDate, String status) {
-        this.invoiceId = invoiceId;
+    public PurchaseInvoice(int adminId, double amount, String purchaseDate, String status) {
         this.adminId = adminId;
         this.amount = amount;
         this.purchaseDate = purchaseDate;
@@ -25,24 +24,29 @@ public class PurchaseInvoice implements Invoice {
     }
 
     @Override
-    public void saveToDatabase() throws SQLException {
+    public boolean saveToDatabase() throws SQLException {
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(
-                     "INSERT INTO buy_bills (id_buy_bills, id_admin, amount, buy_date, state) VALUES (?, ?, ?, ?, ?)")) {
-            stmt.setInt(1, invoiceId);
-            stmt.setInt(2, adminId);
-            stmt.setDouble(3, amount);
-            stmt.setString(4, purchaseDate);
-            stmt.setString(5, status);
+                     "INSERT INTO buy_bills (id_admin, amount, buy_date, state) VALUES (?, ?, ?, ?)")) {
+            stmt.setInt(1, adminId);
+            stmt.setDouble(2, amount);
+            stmt.setString(3, purchaseDate);
+            stmt.setString(4, status);
             stmt.executeUpdate();
             System.out.println("Purchase invoice saved to database.");
         }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     @Override
-    public void loadFromDatabase(int id) throws SQLException {
+    public String exportInvoice(int id) throws SQLException {
         try (Connection conn = ConnectionManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement("SELECT * FROM buy_bills WHERE id_buy_bills = ?")) {
+
             stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -51,15 +55,29 @@ public class PurchaseInvoice implements Invoice {
                 this.amount = rs.getDouble("amount");
                 this.purchaseDate = rs.getString("buy_date");
                 this.status = rs.getString("state");
+
+                return "Hóa đơn nhập hàng:\n" +
+                        "Mã hóa đơn: " + invoiceId +
+                        "\nMã admin: " + adminId +
+                        "\nTổng tiền: " + String.format("%.2f", amount) +
+                        "\nNgày nhập: " + purchaseDate +
+                        "\nTrạng thái: " + status;
             } else {
-                throw new SQLException("Purchase invoice not found with ID: " + id);
+                return "Không tìm thấy hóa đơn với ID này.";
             }
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+            return "Lỗi khi tìm hóa đơn: " + e.getMessage();
         }
     }
 
     @Override
-    public void displayInvoice() {
-        System.out.printf("Purchase Invoice - ID: %d, Admin ID: %d, Amount: %.2f, Purchase Date: %s, Status: %s\n",
-                invoiceId, adminId, amount, purchaseDate, status);
+    public String displayInvoice() {
+        return String.format(
+                "Purchase Invoice - ID: %d\nAdmin ID: %d\nAmount: %.2f\nPurchase Date: %s\nStatus: %s",
+                invoiceId, adminId, amount, purchaseDate, status
+        );
     }
+
 }
