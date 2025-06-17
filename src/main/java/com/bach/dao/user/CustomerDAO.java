@@ -1,0 +1,101 @@
+package com.bach.dao.user;
+
+import com.bach.dao.ConnectionManager;
+import com.bach.model.Customer;
+import com.bach.patterns.userbuilder.CustomerBuilder;
+import com.bach.patterns.userbuilder.UserDirector;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class CustomerDAO {
+
+    public Customer getCustomerByUsernameAndPassword(String username, String password) {
+
+        String sql = "SELECT * FROM customers WHERE username = ? AND password = ? LIMIT 1;";
+        UserDirector director = new UserDirector();
+        CustomerBuilder builder = new CustomerBuilder();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try{
+            conn = ConnectionManager.getConnection();
+            statement = conn.prepareStatement(sql);
+            statement.setNString(1, username);
+            statement.setNString(2, password);
+            rs = statement.executeQuery();
+            if(rs == null || !rs.next()){
+                return null;
+            }
+            director.createCustomerFromResultSet(builder, rs);
+        } catch (SQLException e) {
+            System.out.println("Error while getting admin by username and password: " + e.getMessage());
+        }finally {
+            ConnectionManager.closeQuietly(rs);
+            ConnectionManager.closeQuietly(statement);
+            ConnectionManager.closeQuietly(conn);
+        }
+        return builder.getResult();
+
+    }
+
+    public Customer getCustomerByUsername(String username) {
+
+        String sql = "SELECT * FROM customers WHERE username = ? LIMIT 1;";
+        UserDirector director = new UserDirector();
+        CustomerBuilder builder = new CustomerBuilder();
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try{
+            conn = ConnectionManager.getConnection();
+            statement = conn.prepareStatement(sql);
+            statement.setNString(1, username);
+            rs = statement.executeQuery();
+            if(rs == null || !rs.next()){
+                return null;
+            }
+            director.createCustomerFromResultSet(builder, rs);
+        } catch (SQLException e) {
+            System.out.println("Error while getting customer by username: " + e.getMessage());
+        }finally {
+            ConnectionManager.closeQuietly(rs);
+            ConnectionManager.closeQuietly(statement);
+            ConnectionManager.closeQuietly(conn);
+        }
+        return builder.getResult();
+
+    }
+
+    public void createCustomer(Customer customer){
+
+        String sql =  "INSERT INTO customers (username, password, full_name, phone, address, date_of_birth) VALUES (?, ?, ?, ?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try{
+            conn = ConnectionManager.getConnection();
+            statement = conn.prepareStatement(sql);
+            statement.setNString(1, customer.getUsername());
+            statement.setNString(2, customer.getPassword());
+            statement.setNString(3, customer.getFullName());
+            statement.setNString(4, customer.getPhone());
+            statement.setNString(5, customer.getAddress());
+            statement.setObject(6, customer.getDateOfBirth());
+            int affectedRows = statement.executeUpdate();
+            if (affectedRows == 0) {
+                throw new SQLException("Creating customer failed, no rows affected.");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while creating customer: " + e.getMessage());
+        } finally {
+            ConnectionManager.closeQuietly(rs);
+            ConnectionManager.closeQuietly(statement);
+            ConnectionManager.closeQuietly(conn);
+        }
+
+    }
+
+}
