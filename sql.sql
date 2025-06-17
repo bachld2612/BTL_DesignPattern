@@ -167,6 +167,19 @@ CREATE TABLE sales_bills (
 );
 GO
 
+
+CREATE TABLE discount (
+                          id INT AUTO_INCREMENT PRIMARY KEY,
+                          product_id INT NOT NULL,
+                          discount_type ENUM('percent', 'amount') DEFAULT 'percent',
+                          value FLOAT NOT NULL,
+                          start_date DATE,
+                          end_date DATE,
+                          FOREIGN KEY (product_id) REFERENCES products(id_products) ON DELETE CASCADE
+);
+
+
+GO
 -- Thêm tài khoản admin mặc định
 INSERT INTO admin (username, password, full_name, phone)
 VALUES ('admin', 'admin', 'Administrator', '0123456789');
