@@ -14,12 +14,14 @@ public class Navbar extends JPanel {
         setVisible(true);
         add(new DivComponent(NavItem.LOGIN.getTitle(), () -> Navigator.navigate(NavItem.LOGIN, currentFrame)));
         add(new DivComponent(NavItem.REGISTER.getTitle(), () -> Navigator.navigate(NavItem.REGISTER, currentFrame)));
+        add(new DivComponent(NavItem.SUPPLIER.getTitle(), () -> Navigator.navigate(NavItem.SUPPLIER, currentFrame)));
     }
 
     public enum NavItem{
         LOGIN("Đăng nhập"),
         REGISTER("Đăng ký"),
-        EXIT("Thoát")
+        EXIT("Thoát"),
+        SUPPLIER("Nhà cung cấp"),
         ;
         private final String title;
 
