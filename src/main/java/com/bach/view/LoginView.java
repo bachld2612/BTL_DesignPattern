@@ -1,6 +1,9 @@
 package com.bach.view;
 
+import com.bach.component.Navbar;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 
 public class LoginView extends JFrame {
@@ -9,16 +12,26 @@ public class LoginView extends JFrame {
     private JPasswordField passwordField;
     private JButton loginButton;
     private JButton registerButton;
+    private Navbar navbar;
 
     public LoginView() {
         setTitle("Login");
-        setSize(300, 200);
+        setSize(300, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(new BorderLayout());
         setResizable(false); // Prevent resizing
+        navbar = new Navbar(this);
+        navbar.setVisible(true);
+        navbar.setLocation(0, 0);
+        add(navbar, BorderLayout.NORTH);
+
+
 
         JPanel panel = new JPanel();
         panel.setLayout(null);
+        // Set panel bounds below the navbar (assuming navbar height is 50)
+        panel.setBounds(0, 50, 500, 450);
 
         JLabel usernameLabel = new JLabel("Username:");
         usernameLabel.setBounds(10, 20, 80, 25);
