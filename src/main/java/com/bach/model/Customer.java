@@ -1,25 +1,43 @@
 package com.bach.model;
 
-public class Customer {
-    private int id;
-    private String fullName;
-    private String phone;
+import java.time.LocalDate;
+import java.util.Date;
 
+public class Customer extends Admin{
+
+    private String address;
+    private Date dateOfBirth;
+
+    public Customer(String address, Date dateOfBirth) {
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
+    }
     public Customer(int id, String fullName, String phone) {
-        this.id = id;
-        this.fullName = fullName;
-        this.phone = phone;
+        super(id, null, null, fullName, phone); // username và password tạm để null
+    }
+    public Customer(int id, String username, String password, String fullName, String phone, String address, Date dateOfBirth) {
+        super(id, username, password, fullName, phone);
+        this.address = address;
+        this.dateOfBirth = dateOfBirth;
     }
 
-    public int getId() {
-        return id;
+    public Customer() {
+
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getAddress() {
+        return address;
     }
 
-    public String getPhone() {
-        return phone;
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Date getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(Date dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

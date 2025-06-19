@@ -1,27 +1,35 @@
 package com.bach.view.invoicesales;
 
+import com.bach.component.Navbar;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class InvoiceSalesPanel extends JPanel {
-//    private final JTextField txtInvoiceId;
+public class InvoiceSalesView extends JFrame {
     private final JComboBox<Integer> comboOrderId;
     private final JTextField txtQuantity;
     private final JTextField txtBookingDate;
     private final JComboBox<String> comboStatus;
     private final JButton btnCreate;
     private final JButton btnExport;
+    private Navbar navbar;
 
-    // ✅ Đổi tên constructor cho đúng
-    public InvoiceSalesPanel(List<Integer> orderIds) {
-        setLayout(new GridBagLayout());
+    public InvoiceSalesView(List<Integer> orderIds) {
+        setTitle("Quản lý Hóa Đơn Bán");
+        setSize(500, 400);
+        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        navbar = new Navbar(this);
+        navbar.setVisible(true);
+        navbar.setLocation(0, 0);
+        add(navbar, BorderLayout.NORTH);
+
+        // Panel chứa form
+        JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 5, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
-
-//        JLabel lblInvoiceId = new JLabel("Invoice ID:");
-//        txtInvoiceId = new JTextField();
 
         JLabel lblOrderId = new JLabel("Order ID:");
         comboOrderId = new JComboBox<>(orderIds.toArray(new Integer[0]));
@@ -36,46 +44,41 @@ public class InvoiceSalesPanel extends JPanel {
         comboStatus = new JComboBox<>(new String[]{"Not Paid", "Paid"});
 
         btnCreate = new JButton("Create Invoice");
-
         btnExport = new JButton("Xuất Hóa Đơn");
-//        gbc.gridx = 0; gbc.gridy = 0;
-//        add(lblInvoiceId, gbc);
-//        gbc.gridx = 1;
-//        add(txtInvoiceId, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
-        add(lblOrderId, gbc);
+        int y = 0;
+        gbc.gridx = 0; gbc.gridy = y;
+        panel.add(lblOrderId, gbc);
         gbc.gridx = 1;
-        add(comboOrderId, gbc);
+        panel.add(comboOrderId, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
-        add(lblQuantity, gbc);
+        gbc.gridx = 0; gbc.gridy = ++y;
+        panel.add(lblQuantity, gbc);
         gbc.gridx = 1;
-        add(txtQuantity, gbc);
+        panel.add(txtQuantity, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
-        add(lblBookingDate, gbc);
+        gbc.gridx = 0; gbc.gridy = ++y;
+        panel.add(lblBookingDate, gbc);
         gbc.gridx = 1;
-        add(txtBookingDate, gbc);
+        panel.add(txtBookingDate, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
-        add(lblStatus, gbc);
+        gbc.gridx = 0; gbc.gridy = ++y;
+        panel.add(lblStatus, gbc);
         gbc.gridx = 1;
-        add(comboStatus, gbc);
+        panel.add(comboStatus, gbc);
 
-        gbc.gridx = 1; gbc.gridy++;
+        gbc.gridx = 1; gbc.gridy = ++y;
         gbc.anchor = GridBagConstraints.EAST;
-        add(btnCreate, gbc);
+        panel.add(btnCreate, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridx = 0; gbc.gridy = ++y;
         gbc.anchor = GridBagConstraints.WEST;
-        add(btnExport, gbc);
-    }
-//
-//    public JTextField getTxtInvoiceId() {
-//        return txtInvoiceId;
-//    }
+        panel.add(btnExport, gbc);
 
+        add(panel);
+    }
+
+    // ✅ Getters nếu muốn xử lý bên ngoài
     public JComboBox<Integer> getComboOrderId() {
         return comboOrderId;
     }
@@ -99,6 +102,12 @@ public class InvoiceSalesPanel extends JPanel {
     public JButton getBtnExport() {
         return btnExport;
     }
+
+    // ✅ Hàm chạy thử
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> {
+//            List<Integer> demoOrderIds = List.of(1001, 1002, 1003);
+//            new InvoiceSalesView(demoOrderIds).setVisible(true);
+//        });
+//    }
 }
-
-

@@ -1,7 +1,7 @@
 package com.bach.view;
 
 
-import com.bach.model.User;
+import com.bach.model.Admin;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -17,7 +17,7 @@ public class UserPanel extends JPanel {
     public UserPanel() {
         setLayout(new BorderLayout());
 
-        // Khởi tạo DefaultTableModel với tên cột tương ứng User
+        // Khởi tạo DefaultTableModel với tên cột tương ứng Admin
         tableModel = new DefaultTableModel(new Object[]{"ID", "Username", "Full Name", "Email", "Created At"}, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -37,13 +37,13 @@ public class UserPanel extends JPanel {
         add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
-    // Phương thức do Controller gọi, truyền danh sách User vào để hiển thị
-    public void populateTable(List<User> users) {
+    // Phương thức do Controller gọi, truyền danh sách Admin vào để hiển thị
+    public void populateTable(List<Admin> admins) {
         // Xóa hết dữ liệu cũ
         tableModel.setRowCount(0);
 
-        // Thêm từng User vào tableModel
-        for (User u : users) {
+        // Thêm từng Admin vào tableModel
+        for (Admin u : admins) {
             Object[] row = new Object[]{
                     u.getId(),
             };

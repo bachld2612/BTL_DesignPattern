@@ -3,7 +3,7 @@ package com.bach.controller;
 import com.bach.factory.invoicefactorymethod.Invoice;
 import com.bach.factory.invoicefactorymethod.InvoiceFactory;
 import com.bach.factory.invoicefactorymethod.SalesInvoiceFactory;
-import com.bach.view.invoicesales.InvoiceSalesPanel;
+import com.bach.view.invoicesales.InvoiceSalesView;
 import com.bach.view.invoicesales.InvoiceSalesSearchDialog;
 
 import javax.swing.*;
@@ -11,27 +11,29 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.List;
 
 public class InvoiceSalesController {
-    private final InvoiceSalesPanel panel;
+    private final InvoiceSalesView view;
     private final InvoiceFactory salesFactory;
 
-    public InvoiceSalesController(InvoiceSalesPanel panel) {
-        this.panel = panel;
+    public InvoiceSalesController(List<Integer> orderIds) {
+        this.view = new InvoiceSalesView(orderIds);
         this.salesFactory = new SalesInvoiceFactory();
+        this.view.setVisible(true);
         initController();
     }
 
     private void initController() {
-        panel.getBtnCreate().addActionListener(e -> saveInvoice());
-        panel.getBtnExport().addActionListener(e -> openSearchDialog());
+        view.getBtnCreate().addActionListener(e -> saveInvoice());
+        view.getBtnExport().addActionListener(e -> openSearchDialog());
     }
 
     private void saveInvoice() {
         try {
-            int orderId = (Integer) panel.getComboOrderId().getSelectedItem();
-            int quantity = Integer.parseInt(panel.getTxtQuantity().getText().trim());
-            String dateStr = panel.getTxtBookingDate().getText().trim();
+            int orderId = (Integer) view.getComboOrderId().getSelectedItem();
+            int quantity = Integer.parseInt(view.getTxtQuantity().getText().trim());
+            String dateStr = view.getTxtBookingDate().getText().trim();
 
             // Kiểm tra định dạng ngày hợp lệ (yyyy-MM-dd)
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -45,7 +47,7 @@ public class InvoiceSalesController {
             // bookingDate giữ nguyên là String
             String bookingDate = dateStr;
 
-            String status = (String) panel.getComboStatus().getSelectedItem();
+            String status = (String) view.getComboStatus().getSelectedItem();
 
             // Tạo đối tượng InvoiceSale
 //            InvoiceSale invoice = new InvoiceSale();
@@ -61,23 +63,23 @@ public class InvoiceSalesController {
              boolean success = salesInvoice.saveToDatabase();
             System.out.println(success);
             if (success) {
-                JOptionPane.showMessageDialog(panel, "Invoice created successfully!");
+                JOptionPane.showMessageDialog(view, "Invoice created successfully!");
 
                 // Reset form về mặc định
-                panel.getComboOrderId().setSelectedIndex(0);
-                panel.getTxtQuantity().setText("");
-                panel.getTxtBookingDate().setText("");
-                panel.getComboStatus().setSelectedIndex(0);
+                view.getComboOrderId().setSelectedIndex(0);
+                view.getTxtQuantity().setText("");
+                view.getTxtBookingDate().setText("");
+                view.getComboStatus().setSelectedIndex(0);
             } else {
-                JOptionPane.showMessageDialog(panel, "Failed to create invoice.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Failed to create invoice.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(panel, "Quantity must be a number.");
+            JOptionPane.showMessageDialog(view, "Quantity must be a number.");
         } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(panel, "Invalid date format. Use yyyy-MM-dd.");
+            JOptionPane.showMessageDialog(view, "Invalid date format. Use yyyy-MM-dd.");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(panel, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
             ex.printStackTrace();
         }
     }

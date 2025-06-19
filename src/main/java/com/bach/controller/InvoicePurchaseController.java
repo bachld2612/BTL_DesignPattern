@@ -3,46 +3,47 @@ package com.bach.controller;
 import com.bach.factory.invoicefactorymethod.Invoice;
 import com.bach.factory.invoicefactorymethod.InvoiceFactory;
 import com.bach.factory.invoicefactorymethod.PurchaseInvoiceFactory;
-import com.bach.factory.invoicefactorymethod.SalesInvoiceFactory;
-import com.bach.view.invoicepurchase.InvoicePurchasePanel;
+import com.bach.view.invoicepurchase.InvoicePurchaseView;
 import com.bach.view.invoicepurchase.InvoicePurchaseSearchDialog;
-import com.bach.view.invoicesales.InvoiceSalesPanel;
-import com.bach.view.invoicesales.InvoiceSalesSearchDialog;
 
 import javax.swing.*;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class InvoicePurchaseController {
-    private final InvoicePurchasePanel panel;
+    private final InvoicePurchaseView view;
     private final Map<String, Integer> adminMap;
     private final InvoiceFactory purchaseFactory;
 
-    public InvoicePurchaseController(InvoicePurchasePanel panel , Map<String, Integer> adminMap) {
-        this.panel = panel;
+    public InvoicePurchaseController(Map<String, Integer> adminMap) {
+        List<String> adminNames = new ArrayList<>(adminMap.keySet());
+        this.view = new InvoicePurchaseView(adminNames);
         this.purchaseFactory = new PurchaseInvoiceFactory();
         this.adminMap = adminMap;
+        this.view.setVisible(true);
         initController();
     }
 
     private void initController() {
-        panel.getBtnCreate().addActionListener(e -> saveInvoice());
-        panel.getBtnExport().addActionListener(e -> openSearchDialog());
+        view.getBtnCreate().addActionListener(e -> saveInvoice());
+        view.getBtnExport().addActionListener(e -> openSearchDialog());
     }
 
     private void saveInvoice() {
         try {
-            String selectedAdminName = (String) panel.getComboAdminName().getSelectedItem();
+            String selectedAdminName = (String) view.getComboAdminName().getSelectedItem();
             int adminId = adminMap.getOrDefault(selectedAdminName, -1);
 //            if (adminId == -1) {
 //                JOptionPane.showMessageDialog(frame, "Không tìm thấy ID của admin được chọn.", "Lỗi", JOptionPane.ERROR_MESSAGE);
 //                return;
 //            }
-            double amount = Double.parseDouble(panel.getTxtAmount().getText().trim());
-            String dateStr = panel.getTxtBuyDate().getText().trim();
+            double amount = Double.parseDouble(view.getTxtAmount().getText().trim());
+            String dateStr = view.getTxtBuyDate().getText().trim();
 
             // Kiểm tra định dạng ngày hợp lệ (yyyy-MM-dd)
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -56,7 +57,7 @@ public class InvoicePurchaseController {
             // bookingDate giữ nguyên là String
             String bookingDate = dateStr;
 
-            String status = (String) panel.getComboStatus().getSelectedItem();
+            String status = (String) view.getComboStatus().getSelectedItem();
 
             // Tạo đối tượng InvoiceSale
 //            InvoiceSale invoice = new InvoiceSale();
@@ -72,23 +73,23 @@ public class InvoicePurchaseController {
             boolean success = salesInvoice.saveToDatabase();
             System.out.println(success);
             if (success) {
-                JOptionPane.showMessageDialog(panel, "Invoice created successfully!");
+                JOptionPane.showMessageDialog(view, "Invoice created successfully!");
 
                 // Reset form về mặc định
-                panel.getComboAdminName().setSelectedIndex(0);
-                panel.getTxtAmount().setText("");
-                panel.getTxtBuyDate().setText("");
-                panel.getComboStatus().setSelectedIndex(0);
+                view.getComboAdminName().setSelectedIndex(0);
+                view.getTxtAmount().setText("");
+                view.getTxtBuyDate().setText("");
+                view.getComboStatus().setSelectedIndex(0);
             } else {
-                JOptionPane.showMessageDialog(panel, "Failed to create invoice.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Failed to create invoice.", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(panel, "Quantity must be a number.");
+            JOptionPane.showMessageDialog(view, "Quantity must be a number.");
         } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(panel, "Invalid date format. Use yyyy-MM-dd.");
+            JOptionPane.showMessageDialog(view, "Invalid date format. Use yyyy-MM-dd.");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(panel, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
             ex.printStackTrace();
         }
     }
