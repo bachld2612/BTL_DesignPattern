@@ -37,7 +37,7 @@ public class OrderView extends JFrame {
     private JButton orderButton;
     private Order currentOrder;
 
-    // Thêm interface lồng bên trong View (hoặc có thể tách file riêng nếu muốn)
+    //Thêm interface lồng bên trong View 
     public interface OrderListener {
         void onOrder(String paymentMethod, String note, int cartId, int voucherIndex, double finalAmount);
     }

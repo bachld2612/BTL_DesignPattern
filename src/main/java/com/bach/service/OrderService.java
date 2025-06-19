@@ -59,7 +59,7 @@ public class OrderService {
         }
         int pointsToAdd = (int) (totalAmount / 10000);
         CustomerService.getInstance().updatePoints(customerId, pointsToAdd);
-        // KHÔNG xóa giỏ hàng ở đây nữa
+
     }
 
     public void applyVoucherToOrder(int orderId, int voucherId) {
@@ -67,7 +67,7 @@ public class OrderService {
     }
 
     public boolean processPayment(Order order) {
-        // TODO: Implement payment processing
+
         order.pay();
         return true;
     }
@@ -75,7 +75,7 @@ public class OrderService {
     public void payOrder(Order order) {
         order.pay();
         orderDAO.updateOrderStatus(order.getId(), order.getStatus());
-        // KHÔNG xóa giỏ hàng ở đây nữa
+
     }
 
     private int getCustomerIdByOrder(Order order) {

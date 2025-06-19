@@ -17,13 +17,12 @@ public class OrderController {
             handleOrder(paymentMethod, note, cartId, voucherIndex, finalAmount);
         });
         orderView.setVisible(true);
-        initializeListeners();
+//        initializeListeners();
     }
 
-    private void initializeListeners() {
-        // Add any additional listeners or event handlers here
-        // The basic functionality is already in OrderView
-    }
+//    private void initializeListeners() {
+//
+//    }
 
     public void showOrderView() {
         orderView.setVisible(true);
