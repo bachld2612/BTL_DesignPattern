@@ -10,17 +10,23 @@ public class Navbar extends JPanel {
     public Navbar(JFrame currentFrame) {
         setLayout(new FlowLayout(FlowLayout.LEFT));
         setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(currentFrame.getWidth(), 40));
+        int width = (currentFrame != null) ? currentFrame.getWidth() : 900;
+        setPreferredSize(new Dimension(width, 40));
         setVisible(true);
+
         add(new DivComponent(NavItem.LOGIN.getTitle(), () -> Navigator.navigate(NavItem.LOGIN, currentFrame)));
         add(new DivComponent(NavItem.REGISTER.getTitle(), () -> Navigator.navigate(NavItem.REGISTER, currentFrame)));
+        add(new DivComponent(NavItem.ORDER.getTitle(), () -> Navigator.navigate(NavItem.ORDER, currentFrame)));
+        add(new DivComponent(NavItem.VOUCHER.getTitle(), () -> Navigator.navigate(NavItem.VOUCHER, currentFrame)));
+        add(new DivComponent(NavItem.EXIT.getTitle(), () -> Navigator.navigate(NavItem.EXIT, currentFrame)));
     }
 
     public enum NavItem{
         LOGIN("Đăng nhập"),
         REGISTER("Đăng ký"),
-        EXIT("Thoát")
-        ;
+        ORDER("Đặt hàng"),
+        VOUCHER("Quản lý voucher"),
+        EXIT("Thoát");
         private final String title;
 
         NavItem(String title) {
@@ -31,5 +37,4 @@ public class Navbar extends JPanel {
             return title;
         }
     }
-
 }

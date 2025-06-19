@@ -13,5 +13,7 @@ public interface UserBuilder {
     void phone(String phone);
     void address(String address);
     void dateOfBirth(Date dateOfBirth);
+    void points(int points);
+    void level(String levelName);
 
 }
