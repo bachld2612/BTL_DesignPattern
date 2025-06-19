@@ -9,11 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-<<<<<<< HEAD
-=======
 import java.util.ArrayList;
 import java.util.List;
->>>>>>> 5c2465b58224fa6a7df3b0611b67b21879cf4efa
+
 
 public class CustomerDAO {
 
@@ -103,8 +101,6 @@ public class CustomerDAO {
 
     }
 
-<<<<<<< HEAD
-=======
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT * FROM customers";
@@ -131,5 +127,4 @@ public class CustomerDAO {
         return customers;
     }
 
->>>>>>> 5c2465b58224fa6a7df3b0611b67b21879cf4efa
 }
