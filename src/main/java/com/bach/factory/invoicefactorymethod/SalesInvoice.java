@@ -49,10 +49,10 @@ public class SalesInvoice implements Invoice {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 return "ID: " + rs.getInt("id_sales_bills") +
-                        "\nOrder ID: " + rs.getInt("id_orders") +
-                        "\nAmount: " + rs.getInt("amount") +
-                        "\nBooking Date: " + rs.getString("booking_date") +
-                        "\nStatus: " + rs.getString("state");
+                        "\nMã đặt hàng: " + rs.getInt("id_orders") +
+                        "\nSố lượng: " + rs.getInt("amount") +
+                        "\nNgày bán: " + rs.getString("booking_date") +
+                        "\nTrạng thái: " + rs.getString("state");
             } else {
                 return "Không tìm thấy hóa đơn với ID này.";
             }

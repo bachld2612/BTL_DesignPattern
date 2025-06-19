@@ -18,7 +18,7 @@ public class InvoicePurchaseSearchDialog extends JDialog{
         topPanel.add(new JLabel("Nhập ID hóa đơn:"));
         txtSearchId = new JTextField(10);
         topPanel.add(txtSearchId);
-        btnSearch = new JButton("Tìm kiếm");
+        btnSearch = new JButton("Xuất hóa đơn");
         topPanel.add(btnSearch);
         add(topPanel, BorderLayout.NORTH);
 

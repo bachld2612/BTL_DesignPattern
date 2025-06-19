@@ -70,23 +70,22 @@ public class InvoicePurchaseController {
             boolean success = salesInvoice.saveToDatabase();
             System.out.println(success);
             if (success) {
-                JOptionPane.showMessageDialog(view, "Invoice created successfully!");
+                JOptionPane.showMessageDialog(view, "Tạo Hóa Đơn Thành Công");
 
                 // Reset form về mặc định
-                view.getTxtAdminName().setText("");
                 view.getTxtAmount().setText("");
                 view.getTxtBuyDate().setText("");
                 view.getComboStatus().setSelectedIndex(0);
             } else {
-                JOptionPane.showMessageDialog(view, "Failed to create invoice.", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(view, "Tạo Hóa Đơn Thất Bại.", "Lỗi", JOptionPane.ERROR_MESSAGE);
             }
 
         } catch (NumberFormatException ex) {
-            JOptionPane.showMessageDialog(view, "Quantity must be a number.");
+            JOptionPane.showMessageDialog(view, "Số tiền phải là số.");
         } catch (DateTimeParseException ex) {
-            JOptionPane.showMessageDialog(view, "Invalid date format. Use yyyy-MM-dd.");
+            JOptionPane.showMessageDialog(view, "Định dạng ngày không hợp lệ. Sử dụng yyyy-MM-dd.");
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(view, "Error: " + ex.getMessage());
+            JOptionPane.showMessageDialog(view, "Lỗi: " + ex.getMessage());
             ex.printStackTrace();
         }
     }

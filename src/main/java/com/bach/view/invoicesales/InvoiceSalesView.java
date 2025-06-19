@@ -35,17 +35,17 @@ public class InvoiceSalesView extends JFrame {
         lblTitle.setFont(new Font("Arial", Font.BOLD, 22));
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
-        JLabel lblOrderId = new JLabel("Order ID:");
+        JLabel lblOrderId = new JLabel("Mã đặt hàng:");
         comboOrderId = new JComboBox<>(orderIds.toArray(new Integer[0]));
 
-        JLabel lblQuantity = new JLabel("Quantity:");
+        JLabel lblQuantity = new JLabel("Số lượng:");
         txtQuantity = new JTextField();
 
-        JLabel lblBookingDate = new JLabel("Booking Date (yyyy-MM-dd):");
+        JLabel lblBookingDate = new JLabel("Ngày bán: (yyyy-MM-dd):");
         txtBookingDate = new JTextField();
 
-        JLabel lblStatus = new JLabel("Status:");
-        comboStatus = new JComboBox<>(new String[]{"Not Paid", "Paid"});
+        JLabel lblStatus = new JLabel("Trạng thái:");
+        comboStatus = new JComboBox<>(new String[]{"Chưa Thanh Toán", "Đã Thanh Toán"});
 
         btnCreate = new JButton("Tạo Hóa Đơn");
         btnExport = new JButton("Xuất Hóa Đơn");
