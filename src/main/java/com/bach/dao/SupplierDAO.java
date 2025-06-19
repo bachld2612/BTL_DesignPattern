@@ -33,7 +33,7 @@ public class SupplierDAO {
 
     public void updateSupplier(Supplier supplier) {
 
-        String query = "UPDATE suppliers SET name = ?, phone = ?, address = ?, email = ? WHERE id = ?";
+        String query = "UPDATE suppliers SET name = ?, phone = ?, address = ?, email = ? WHERE id_suppliers = ?";
         Connection conn = null;
         PreparedStatement statement = null;
         try {
@@ -43,6 +43,7 @@ public class SupplierDAO {
             statement.setNString(2, supplier.getPhone());
             statement.setNString(3, supplier.getAddress());
             statement.setNString(4, supplier.getEmail());
+            statement.setInt(5, supplier.getId());
             statement.executeUpdate();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -55,7 +56,7 @@ public class SupplierDAO {
 
     public void deleteSupplier(int id) {
 
-        String query = "DELETE FROM suppliers WHERE id = ?";
+        String query = "DELETE FROM suppliers WHERE id_suppliers = ?";
         Connection conn = null;
         PreparedStatement statement = null;
         try {

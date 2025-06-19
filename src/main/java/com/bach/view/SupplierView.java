@@ -1,71 +1,168 @@
 package com.bach.view;
 
 import com.bach.component.Navbar;
+import com.bach.model.Supplier;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.List;
 
 public class SupplierView extends JFrame {
+    private JTextField idField;
+    private JTextField nameField;
+    private JTextField phoneField;
+    private JTextField addressField;
+    private JTextField emailField;
+    private JButton editButton;
+    private JButton deleteButton;
     private JTable supplierTable;
-    private Navbar navbar;
     private DefaultTableModel tableModel;
+    private Navbar navbar;
 
     public SupplierView() {
-        setTitle("Nhà cung cấp");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 500);
+        setTitle("Quản lý nhà cung cấp");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(900, 600);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
-        setResizable(true);
+        setLayout(new BorderLayout(10, 10));
 
         navbar = new Navbar(this);
         add(navbar, BorderLayout.NORTH);
 
-        JLabel titleLabel = new JLabel("Nhà cung cấp", SwingConstants.CENTER);
-        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
-        titleLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
-        add(titleLabel, BorderLayout.PAGE_START);
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setBorder(BorderFactory.createTitledBorder("Thông tin nhà cung cấp"));
 
-        String[] columnNames = {"ID", "Tên nhà cung cấp", "Số điện thoại", "Địa chỉ", "Email", "Hành động"};
-        tableModel = new DefaultTableModel(null, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                // Only the action column is editable (for buttons)
-                return column == 5;
+        idField = new JTextField();
+        nameField = new JTextField();
+        phoneField = new JTextField();
+        addressField = new JTextField();
+        emailField = new JTextField();
+
+        idField.setEditable(false);
+
+        formPanel.add(createFormRow("ID:", idField));
+        formPanel.add(Box.createVerticalStrut(8));
+        formPanel.add(createFormRow("Tên nhà cung cấp:", nameField));
+        formPanel.add(Box.createVerticalStrut(8));
+        formPanel.add(createFormRow("Số điện thoại:", phoneField));
+        formPanel.add(Box.createVerticalStrut(8));
+        formPanel.add(createFormRow("Địa chỉ:", addressField));
+        formPanel.add(Box.createVerticalStrut(8));
+        formPanel.add(createFormRow("Email:", emailField));
+        formPanel.add(Box.createVerticalStrut(12));
+
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 2));
+        editButton = new JButton("Sửa");
+        deleteButton = new JButton("Xoá");
+        buttonPanel.add(editButton);
+        buttonPanel.add(deleteButton);
+        formPanel.add(buttonPanel);
+
+        JPanel formWrapper = new JPanel(new BorderLayout());
+        formWrapper.add(formPanel, BorderLayout.CENTER);
+        formWrapper.setBorder(BorderFactory.createEmptyBorder(16, 32, 8, 32));
+
+        String[] columns = {"ID", "Tên", "SĐT", "Địa chỉ", "Email"};
+        tableModel = new DefaultTableModel(columns, 0) {
+            public boolean isCellEditable(int row, int col) {
+                return false;
             }
         };
         supplierTable = new JTable(tableModel);
-        supplierTable.setRowHeight(32);
-        supplierTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        supplierTable.setFillsViewportHeight(true);
-
-        // Custom renderer for action buttons
-        supplierTable.getColumn("Hành động").setCellRenderer((table, value, isSelected, hasFocus, row, column) -> {
-            JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
-            JButton editButton = new JButton("Sửa");
-            JButton deleteButton = new JButton("Xoá");
-            panel.add(editButton);
-            panel.add(deleteButton);
-            return panel;
-        });
+        supplierTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        supplierTable.setRowHeight(26);
 
         JScrollPane scrollPane = new JScrollPane(supplierTable);
-        add(scrollPane, BorderLayout.CENTER);
+        scrollPane.setBorder(BorderFactory.createTitledBorder("Danh sách nhà cung cấp"));
+
+        // Group form and table in a center panel
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BorderLayout(0, 10));
+        centerPanel.add(formWrapper, BorderLayout.NORTH);
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
+        add(centerPanel, BorderLayout.CENTER);
+
+        supplierTable.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                int row = supplierTable.getSelectedRow();
+                if (row != -1) {
+                    idField.setText(tableModel.getValueAt(row, 0).toString());
+                    nameField.setText(tableModel.getValueAt(row, 1).toString());
+                    phoneField.setText(tableModel.getValueAt(row, 2).toString());
+                    addressField.setText(tableModel.getValueAt(row, 3).toString());
+                    emailField.setText(tableModel.getValueAt(row, 4).toString());
+                }
+            }
+        });
+
+        addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent evt) {
+                int width = getWidth();
+                int padding = Math.max(24, width / 14);
+                formWrapper.setBorder(BorderFactory.createEmptyBorder(16, padding, 8, padding));
+            }
+        });
+
     }
 
-    public void addEditButtonListener(ActionListener listener) {
+    private JPanel createFormRow(String labelText, JTextField textField) {
+        JPanel row = new JPanel(new BorderLayout(10, 0));
+        JLabel label = new JLabel(labelText);
+        label.setPreferredSize(new Dimension(130, 24));
+        textField.setPreferredSize(new Dimension(0, 24));
+        textField.setMaximumSize(new Dimension(Integer.MAX_VALUE, 24));
+        row.add(label, BorderLayout.WEST);
+        row.add(textField, BorderLayout.CENTER);
+        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
+        return row;
+    }
+
+    public void setSupplierData(List<Supplier> supplierList) {
+        tableModel.setRowCount(0);
+        for (Supplier s : supplierList) {
+            tableModel.addRow(new Object[]{
+                    s.getId(), s.getName(), s.getPhone(), s.getAddress(), s.getEmail()
+            });
+        }
+    }
+
+    public Supplier getSelectedSupplierFromForm() {
+
+        Supplier supplier = new Supplier();
+        supplier.setId(Integer.parseInt(idField.getText()));
+        supplier.setName(nameField.getText());
+        supplier.setPhone(phoneField.getText());
+        supplier.setAddress(addressField.getText());
+        supplier.setEmail(emailField.getText());
+        return supplier;
 
     }
 
-    public void addDeleteButtonListener(ActionListener listener) {
-
+    public void setEditButtonListener(ActionListener listener) {
+        editButton.addActionListener(listener);
     }
 
-    public JTable getSupplierTable() {
-        return supplierTable;
+    public void setDeleteButtonListener(ActionListener listener) {
+        deleteButton.addActionListener(listener);
+    }
+
+    public void refreshTable(List<Supplier> suppliers) {
+        tableModel.setRowCount(0);
+        setSupplierData(suppliers);
+        idField.setText("");
+        nameField.setText("");
+        phoneField.setText("");
+        addressField.setText("");
+        emailField.setText("");
+    }
+    public void showError(String message) {
+        JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void showMessage(String message) {
+        JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
     }
 }

@@ -15,6 +15,7 @@ public class Navbar extends JPanel {
         add(new DivComponent(NavItem.LOGIN.getTitle(), () -> Navigator.navigate(NavItem.LOGIN, currentFrame)));
         add(new DivComponent(NavItem.REGISTER.getTitle(), () -> Navigator.navigate(NavItem.REGISTER, currentFrame)));
         add(new DivComponent(NavItem.SUPPLIER.getTitle(), () -> Navigator.navigate(NavItem.SUPPLIER, currentFrame)));
+        add(new DivComponent(NavItem.CREATE_SUPPLIER.getTitle(), () -> Navigator.navigate(NavItem.CREATE_SUPPLIER, currentFrame)));
     }
 
     public enum NavItem{
@@ -22,6 +23,7 @@ public class Navbar extends JPanel {
         REGISTER("Đăng ký"),
         EXIT("Thoát"),
         SUPPLIER("Nhà cung cấp"),
+        CREATE_SUPPLIER("Tạo nhà cung cấp")
         ;
         private final String title;
 

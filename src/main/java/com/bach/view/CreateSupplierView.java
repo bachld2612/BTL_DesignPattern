@@ -24,19 +24,19 @@ public class CreateSupplierView extends JFrame {
         setLocationRelativeTo(null); // Center on screen
         setLayout(new BorderLayout(10, 10));
 
-        // Add Navbar at the top
+        // Tạo panel phía trên chứa cả navbar và tiêu đề
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
         navbar = new Navbar(this);
-        add(navbar, BorderLayout.PAGE_START);
-
-        // Add title above the form
+        topPanel.add(navbar, BorderLayout.NORTH);
         JLabel titleLabel = new JLabel("Thêm nhà cung cấp", SwingConstants.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 18));
         JPanel titlePanel = new JPanel(new BorderLayout());
         titlePanel.add(titleLabel, BorderLayout.CENTER);
         titlePanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 0, 0));
-        add(titlePanel, BorderLayout.BEFORE_FIRST_LINE);
+        topPanel.add(titlePanel, BorderLayout.SOUTH);
+        add(topPanel, BorderLayout.PAGE_START);
 
-        // Move buttonPanel below formPanel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         addButton = new JButton("Thêm");
         backButton = new JButton("Trở về");
@@ -58,7 +58,6 @@ public class CreateSupplierView extends JFrame {
         add(formPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH); // Place below formPanel
 
-        // Responsive: adjust layout on resize
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 int width = getWidth();

@@ -1,5 +1,7 @@
 package com.bach.model;
 
+import com.bach.patterns.sessionsingleton.Session;
+
 public class Supplier {
 
     private int id;
@@ -10,6 +12,7 @@ public class Supplier {
     private int adminId;
 
     public Supplier() {
+        this.setAdminId(Session.getInstance().getId());
     }
 
     public Supplier(int id, String name, String phone, String address, String email, int adminId) {
