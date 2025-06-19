@@ -31,6 +31,10 @@ public class InvoiceSalesView extends JFrame {
         gbc.insets = new Insets(10, 10, 5, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        JLabel lblTitle = new JLabel("Hóa Đơn Bán Hàng");
+        lblTitle.setFont(new Font("Arial", Font.BOLD, 22));
+        lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
+
         JLabel lblOrderId = new JLabel("Order ID:");
         comboOrderId = new JComboBox<>(orderIds.toArray(new Integer[0]));
 
@@ -43,11 +47,20 @@ public class InvoiceSalesView extends JFrame {
         JLabel lblStatus = new JLabel("Status:");
         comboStatus = new JComboBox<>(new String[]{"Not Paid", "Paid"});
 
-        btnCreate = new JButton("Create Invoice");
+        btnCreate = new JButton("Tạo Hóa Đơn");
         btnExport = new JButton("Xuất Hóa Đơn");
 
-        int y = 0;
-        gbc.gridx = 0; gbc.gridy = y;
+        int y = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2; // 👈 chiếm 2 cột
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.insets = new Insets(10, 0, 10, 0); // cách trên dưới
+
+        panel.add(lblTitle, gbc);
+        gbc.gridwidth = 1; // reset lại
+
+        gbc.gridx = 0; gbc.gridy = y++;
         panel.add(lblOrderId, gbc);
         gbc.gridx = 1;
         panel.add(comboOrderId, gbc);
@@ -67,13 +80,26 @@ public class InvoiceSalesView extends JFrame {
         gbc.gridx = 1;
         panel.add(comboStatus, gbc);
 
-        gbc.gridx = 1; gbc.gridy = ++y;
+//        gbc.gridx = 1; gbc.gridy = ++y;
+//        gbc.anchor = GridBagConstraints.EAST;
+//        panel.add(btnCreate, gbc);
+//
+//        gbc.gridx = 0; gbc.gridy = ++y;
+//        gbc.anchor = GridBagConstraints.WEST;
+//        panel.add(btnExport, gbc);
+
+        gbc.gridy = ++y;
+
+        gbc.gridx = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(10, 20, 10, 10); // thêm khoảng cách bên trái
+        panel.add(btnExport, gbc);
+
+        gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.EAST;
+        gbc.insets = new Insets(10, 10, 10, 20); // thêm khoảng cách bên phải
         panel.add(btnCreate, gbc);
 
-        gbc.gridx = 0; gbc.gridy = ++y;
-        gbc.anchor = GridBagConstraints.WEST;
-        panel.add(btnExport, gbc);
 
         add(panel);
     }
