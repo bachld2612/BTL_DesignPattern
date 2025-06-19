@@ -2,7 +2,7 @@ package com.bach.patterns.state;
 
 import com.bach.model.Order;
 
-public class PendingOrderState implements OrderState {
+public class PendingOrderState extends OrderState {
     @Override
     public void pay(Order order) {
         order.setState(new PaidOrderState());

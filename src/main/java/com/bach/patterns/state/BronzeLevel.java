@@ -1,14 +1,14 @@
 package com.bach.patterns.state;
 
-public class BronzeLevel implements MemberLevel {
+public class BronzeLevel extends MemberLevel {
     @Override
     public String getLevelName() {
-        return "Bronze";
+        return "BRONZE";
     }
 
     @Override
     public double getDiscountRate() {
-        return 0.05; // 5% discount
+        return 0.0;
     }
 
     @Override

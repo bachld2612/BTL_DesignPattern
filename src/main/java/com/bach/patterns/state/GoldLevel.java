@@ -1,14 +1,14 @@
 package com.bach.patterns.state;
 
-public class GoldLevel implements MemberLevel {
+public class GoldLevel extends MemberLevel {
     @Override
     public String getLevelName() {
-        return "Gold";
+        return "GOLD";
     }
 
     @Override
     public double getDiscountRate() {
-        return 0.15; // 15% discount
+        return 0.10;
     }
 
     @Override
@@ -18,6 +18,6 @@ public class GoldLevel implements MemberLevel {
 
     @Override
     public String getDescription() {
-        return "VIP member level with 15% discount";
+        return "VIP member level with 10% discount";
     }
 } 

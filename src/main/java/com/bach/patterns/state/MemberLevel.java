@@ -1,8 +1,10 @@
 package com.bach.patterns.state;
 
-public interface MemberLevel {
-    String getLevelName();
-    double getDiscountRate();
-    int getRequiredPoints();
-    String getDescription();
+public abstract class MemberLevel {
+    public abstract String getLevelName();
+    public abstract double getDiscountRate();
+    public abstract int getRequiredPoints();
+    public String getDescription() {
+        return getLevelName() + " (" + (int)(getDiscountRate()*100) + "% giảm giá, từ " + getRequiredPoints() + " điểm)";
+    }
 } 

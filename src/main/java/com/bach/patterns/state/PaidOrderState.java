@@ -2,21 +2,11 @@ package com.bach.patterns.state;
 
 import com.bach.model.Order;
 
-public class PaidOrderState implements OrderState {
-    @Override
-    public void pay(Order order) {
-        throw new IllegalStateException("Order is already paid.");
-    }
-
+public class PaidOrderState extends OrderState {
     @Override
     public void ship(Order order) {
         order.setState(new ShippedOrderState());
         order.setStatus("SHIPPED");
-    }
-
-    @Override
-    public void complete(Order order) {
-        throw new IllegalStateException("Cannot complete an order before shipping.");
     }
 
     @Override

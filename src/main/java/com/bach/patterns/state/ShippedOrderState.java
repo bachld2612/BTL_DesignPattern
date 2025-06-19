@@ -2,7 +2,7 @@ package com.bach.patterns.state;
 
 import com.bach.model.Order;
 
-public class ShippedOrderState implements OrderState {
+public class ShippedOrderState extends OrderState {
     @Override
     public void pay(Order order) {
         throw new IllegalStateException("Order is already paid and shipped.");
