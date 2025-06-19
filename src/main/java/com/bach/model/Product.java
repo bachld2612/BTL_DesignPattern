@@ -4,23 +4,25 @@ public class Product {
     private int id;
     private String name;
     private String description;
-    private float price;
+    private double price;
     private String state;
+    private int supplierId;
+    private int adminId;
 
-    // Constructor không tham số
     public Product() {
     }
 
-    // Constructor đầy đủ
-    public Product(int id, String name, String description, float price, String state) {
+    public Product(int id, String name, String description, double price, String state, int supplierId, int adminId) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.state = state;
+        this.supplierId = supplierId;
+        this.adminId = adminId;
     }
 
-    // Getter & Setter
+    // Getters and Setters
     public int getId() {
         return id;
     }
@@ -45,11 +47,11 @@ public class Product {
         this.description = description;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -60,4 +62,33 @@ public class Product {
     public void setState(String state) {
         this.state = state;
     }
-}
+
+    public int getSupplierId() {
+        return supplierId;
+    }
+
+    public void setSupplierId(int supplierId) {
+        this.supplierId = supplierId;
+    }
+
+    public int getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(int adminId) {
+        this.adminId = adminId;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", price=" + price +
+                ", state='" + state + '\'' +
+                ", supplierId=" + supplierId +
+                ", adminId=" + adminId +
+                '}';
+    }
+} 

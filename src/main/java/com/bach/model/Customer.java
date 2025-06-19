@@ -1,41 +1,62 @@
 package com.bach.model;
 
-import java.time.LocalDate;
-import java.util.Date;
+import com.bach.patterns.state.MemberLevel;
+import com.bach.patterns.state.BronzeLevel;
+import com.bach.patterns.state.SilverLevel;
+import com.bach.patterns.state.GoldLevel;
 
-public class Customer extends Admin{
-
+public class Customer extends Admin {
     private String address;
-    private Date dateOfBirth;
+    private String dateOfBirth;
+    private int points;
+    private MemberLevel level;
 
-    public Customer(String address, Date dateOfBirth) {
-        this.address = address;
-        this.dateOfBirth = dateOfBirth;
+    public Customer() {
+        super();
+        this.points = 0;
+        this.level = new BronzeLevel();
     }
 
-    public Customer(int id, String username, String password, String fullName, String phone, String address, Date dateOfBirth) {
+    public Customer(int id, String username, String password, String fullName, String phone, String address, String dateOfBirth) {
         super(id, username, password, fullName, phone);
         this.address = address;
         this.dateOfBirth = dateOfBirth;
+        this.points = 0;
+        this.level = new BronzeLevel();
     }
 
-    public Customer() {
-
+    public Customer(int id, String fullName, String phone) {
+        super(id, null, null, fullName, phone);
     }
 
-    public String getAddress() {
-        return address;
+    public void addPoints(int points) {
+        this.points += points;
+        updateLevel();
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    private void updateLevel() {
+        if (points >= 5000) {
+            level = new GoldLevel();
+        } else if (points >= 1000) {
+            level = new SilverLevel();
+        } else {
+            level = new BronzeLevel();
+        }
     }
 
-    public Date getDateOfBirth() {
-        return dateOfBirth;
+    // Getters and setters
+    public String getAddress() { return address; }
+    public void setAddress(String address) { this.address = address; }
+    
+    public String getDateOfBirth() { return dateOfBirth; }
+    public void setDateOfBirth(String dateOfBirth) { this.dateOfBirth = dateOfBirth; }
+    
+    public int getPoints() { return points; }
+    public void setPoints(int points) { 
+        this.points = points;
+        updateLevel();
     }
-
-    public void setDateOfBirth(Date dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
+    
+    public MemberLevel getLevel() { return level; }
+    public void setLevel(MemberLevel level) { this.level = level; }
 }

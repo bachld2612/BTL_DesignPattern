@@ -2,13 +2,10 @@ package com.bach.patterns.userbuilder;
 
 import com.bach.model.Customer;
 
-import java.time.LocalDate;
 import java.util.Date;
 
-public class CustomerBuilder implements UserBuilder{
-
+public class CustomerBuilder implements UserBuilder {
     private Customer customer;
-
 
     @Override
     public void reset() {
@@ -68,7 +65,36 @@ public class CustomerBuilder implements UserBuilder{
         if (customer == null) {
             throw new RuntimeException("Builder not initialized. Call reset() first.");
         }
-        customer.setDateOfBirth(dateOfBirth);
+        // Convert Date to String in format "yyyy-MM-dd"
+        String dateStr = new java.text.SimpleDateFormat("yyyy-MM-dd").format(dateOfBirth);
+        customer.setDateOfBirth(dateStr);
+    }
+
+    public void points(int points) {
+        if (customer == null) {
+            throw new RuntimeException("Builder not initialized. Call reset() first.");
+        }
+        customer.setPoints(points);
+    }
+
+    public void level(String levelName) {
+        if (customer == null) {
+            throw new RuntimeException("Builder not initialized. Call reset() first.");
+        }
+        if (levelName == null) {
+            customer.setLevel(new com.bach.patterns.state.BronzeLevel());
+            return;
+        }
+        switch (levelName.toUpperCase()) {
+            case "GOLD":
+                customer.setLevel(new com.bach.patterns.state.GoldLevel());
+                break;
+            case "SILVER":
+                customer.setLevel(new com.bach.patterns.state.SilverLevel());
+                break;
+            default:
+                customer.setLevel(new com.bach.patterns.state.BronzeLevel());
+        }
     }
 
     public Customer getResult() {

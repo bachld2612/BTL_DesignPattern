@@ -26,6 +26,8 @@ public class UserDirector {
         builder.phone(resultSet.getNString("phone"));
         builder.address(resultSet.getNString("address"));
         builder.dateOfBirth(resultSet.getObject("date_of_birth", java.util.Date.class));
+        builder.points(resultSet.getInt("points"));
+        builder.level(resultSet.getString("level"));
     }
 
     public void createCustomerFromRegisterView(UserBuilder builder, RegisterView view) {

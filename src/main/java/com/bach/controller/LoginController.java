@@ -1,5 +1,6 @@
 package com.bach.controller;
 
+import com.bach.controller.supplier.CreateSupplierController;
 import com.bach.patterns.sessionsingleton.Session;
 import com.bach.service.UserService;
 import com.bach.view.LoginView;
@@ -41,22 +42,17 @@ public class LoginController {
         try {
             // Thử đăng nhập (có thể ném RuntimeException nếu sai)
             userService.login(username, password);
-
-            String role = com.bach.patterns.sessionsingleton.Session.getInstance().getRole();
-
-            if ("admin".equalsIgnoreCase(role)) {
+            loginView.showMessage("Login successful with role: " + Session.getInstance().getRole() + " id: " + Session.getInstance().getId());
+            if (Session.getInstance().getRole().equals("admin")) {
+                new OrderController();
                 loginView.dispose();
-                new AdminDiscountView().setVisible(true);
-            } else if ("customer".equalsIgnoreCase(role)) {
-                loginView.showMessage("Bạn đã đăng nhập thành công với vai trò khách hàng.");
-                // TODO: chuyển sang giao diện chính của customer nếu cần
-            } else {
-                loginView.showMessage("Đăng nhập thành công!");
             }
-
-        } catch (RuntimeException ex) {
-            // E-3: Sai tài khoản hoặc mật khẩu
-            loginView.showError("Tên đăng nhập hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại");
+            else{
+                new CustomerMainController();
+                loginView.dispose();
+            }
+        }catch (RuntimeException e) {
+            loginView.showError(e.getMessage());
         }
     }
 
