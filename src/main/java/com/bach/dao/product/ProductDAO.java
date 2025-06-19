@@ -1,16 +1,14 @@
 package com.bach.dao.product;
-
-<<<<<<< HEAD
 import com.bach.dao.ConnectionManager;
-import com.bach.model.Product;
-
-=======
->>>>>>> 6df2e14c0a8b253c5f2f5220e3fa456d59dc4888
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import com.bach.model.product.BasicProductFactory;
+import com.bach.model.product.PremiumProductFactory;
+import com.bach.model.Product;
+import com.bach.model.product.Product1;
+import com.bach.model.product.ProductFactory;
 
-<<<<<<< HEAD
 public class ProductDAO {
 
     public List<Product> getAllProducts() {
@@ -45,17 +43,10 @@ public class ProductDAO {
             e.printStackTrace();
         }
     }
-}
-=======
-import com.bach.dao.ConnectionManager;
-import com.bach.model.product.BasicProductFactory;
-import com.bach.model.product.PremiumProductFactory;
-import com.bach.model.product.Product;
-import com.bach.model.product.ProductFactory;
 
-public class ProductDAO {
-    public List<Product> findAll() {
-        List<Product> danhSach = new ArrayList<>();
+
+    public List<Product1> findAll() {
+        List<Product1> danhSach = new ArrayList<>();
         String sql = "SELECT * FROM products";
 
         try (Connection conn = ConnectionManager.getConnection();
@@ -79,7 +70,7 @@ public class ProductDAO {
                     factory = new BasicProductFactory();
                 }
 
-                Product product = factory.createProduct(id , supId, name, desc, price, state, adminId);
+                Product1 product = factory.createProduct(id , supId, name, desc, price, state, adminId);
                 danhSach.add(product);
             }
 
@@ -91,7 +82,7 @@ public class ProductDAO {
     }
 
 
-    public void insert(Product product) {
+    public void insert(Product1 product) {
         String sql = "INSERT INTO products (id_suppliers, name_products, description, price, state, id_admin) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionManager.getConnection();
@@ -112,7 +103,7 @@ public class ProductDAO {
     }
 
 
-    public void update(Product product) {
+    public void update(Product1 product) {
         String sql = "UPDATE products SET id_suppliers = ?, name_products = ?, description = ?, price = ?, state = ?, id_admin = ? WHERE id_products = ?";
 
         try (Connection conn = ConnectionManager.getConnection();
@@ -147,6 +138,4 @@ public class ProductDAO {
         }
     }
 
-
 }
->>>>>>> 6df2e14c0a8b253c5f2f5220e3fa456d59dc4888

@@ -1,17 +1,17 @@
 package com.bach.patterns.decorator;
 
 public class FixedAmountDiscountDecorator extends ProductDecorator{
-    private float discountAmount;
+    private double discountAmount;
 
-    public FixedAmountDiscountDecorator(ProductComponent product, float discountAmount) {
+    public FixedAmountDiscountDecorator(ProductComponent product, double discountAmount) {
         super(product);
         this.discountAmount = discountAmount;
     }
 
     @Override
-    public float getPrice() {
-        float originalPrice = super.getPrice();
-        float discounted = originalPrice - discountAmount;
+    public double getPrice() {
+        double originalPrice = super.getPrice();
+        double discounted = originalPrice - discountAmount;
         return Math.max(0, discounted); // không cho âm giá
     }
 }

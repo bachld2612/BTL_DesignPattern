@@ -101,9 +101,7 @@ public class CustomerDAO {
 
     }
 
-<<<<<<< HEAD
 
-=======
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT * FROM customers";
@@ -129,6 +127,5 @@ public class CustomerDAO {
         }
         return customers;
     }
->>>>>>> 6df2e14c0a8b253c5f2f5220e3fa456d59dc4888
 
 }

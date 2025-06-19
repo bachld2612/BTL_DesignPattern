@@ -2,9 +2,9 @@ package com.bach.patterns.decorator;
 
 public class ConcreteProduct implements ProductComponent{
     private String name;
-    private float price;
+    private double price;
 
-    public ConcreteProduct(String name, float price) {
+    public ConcreteProduct(String name, double price) {
         this.name = name;
         this.price = price;
     }
@@ -15,7 +15,7 @@ public class ConcreteProduct implements ProductComponent{
     }
 
     @Override
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 }

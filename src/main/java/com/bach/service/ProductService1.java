@@ -23,7 +23,7 @@ public class ProductService1 {
         productDAO.updatePrice(id, price);
     }
 
-    public float getDiscountedPrice(Product p) {
+    public double getDiscountedPrice(Product p) {
         Discount d = discountDAO.getActiveDiscount(p.getId());
         if (d != null) {
             if ("percent".equals(d.getDiscountType())) {

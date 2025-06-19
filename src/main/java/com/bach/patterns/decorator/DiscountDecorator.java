@@ -11,9 +11,9 @@ public class DiscountDecorator extends ProductDecorator {
     }
 
     @Override
-    public float getPrice() {
-        float originalPrice = product.getPrice();
-        float finalPrice;
+    public double getPrice() {
+        double originalPrice = product.getPrice();
+        double finalPrice;
 
         if ("percent".equalsIgnoreCase(discountType)) {
             finalPrice = originalPrice * (1 - discountValue / 100f);

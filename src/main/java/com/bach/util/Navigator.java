@@ -14,6 +14,7 @@ import com.bach.view.SupplierView;
 import com.bach.controller.VoucherManagementController;
 import com.bach.view.VoucherManagementView;
 import com.bach.view.PointsManagementView;
+import com.bach.view.AdminDiscountView;
 
 import javax.swing.*;
 import java.util.List;
@@ -77,6 +78,11 @@ public class Navigator {
                 currentFrame.dispose();
                 new ProductView().setVisible(true);
                 break;
+
+            case DISCOUNT:
+                currentFrame.dispose();
+                new AdminDiscountView().setVisible(true);
+                break;    
             default:
                 throw new IllegalArgumentException("Unknown navigation item: " + navItem);
         }

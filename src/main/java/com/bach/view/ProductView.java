@@ -4,7 +4,7 @@ import com.bach.component.Navbar;
 import com.bach.controller.ProductController;
 import com.bach.model.product.BasicProductFactory;
 import com.bach.model.product.PremiumProductFactory;
-import com.bach.model.product.Product;
+import com.bach.model.product.Product1;
 import com.bach.model.product.ProductFactory;
 
 import javax.swing.*;
@@ -128,8 +128,8 @@ public class ProductView extends JFrame {
 
     private void loadData() {
         model.setRowCount(0);
-        List<Product> list = controller.getAll();
-        for (Product p : list) {
+        List<Product1> list = controller.getAll();
+        for (Product1 p : list) {
             model.addRow(new Object[]{
                     p.getId_products(),
                     p.getSupplierId(),
@@ -144,7 +144,7 @@ public class ProductView extends JFrame {
 
     private void addListeners() {
         btnAdd.addActionListener(e -> {
-            Product p = buildProductFromForm();
+            Product1 p = buildProductFromForm();
             if (p != null) {
                 controller.add(p);
                 loadData();
@@ -155,7 +155,7 @@ public class ProductView extends JFrame {
         btnEdit.addActionListener(e -> {
             int row = tblProducts.getSelectedRow();
             if (row >= 0) {
-                Product p = buildProductFromForm();
+                Product1 p = buildProductFromForm();
                 if (p != null) {
                     int id = (int) model.getValueAt(row, 0);
                     p.setId_products(id);
@@ -194,7 +194,7 @@ public class ProductView extends JFrame {
         });
     }
 
-    private Product buildProductFromForm() {
+    private Product1 buildProductFromForm() {
         try {
             String name = txtName.getText().trim();
             String desc = txtDesc.getText().trim();
