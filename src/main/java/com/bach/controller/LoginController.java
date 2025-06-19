@@ -1,22 +1,18 @@
 package com.bach.controller;
 
-import com.bach.model.product.Product;
+import com.bach.controller.supplier.CreateSupplierController;
 import com.bach.patterns.sessionsingleton.Session;
 import com.bach.service.UserService;
-import com.bach.view.CustomerView;
 import com.bach.view.LoginView;
-import com.bach.view.ProductView;
 
 public class LoginController {
 
     private final UserService userService;
     private final LoginView loginView;
-    private final CustomerView customerMainView;
 
     public LoginController() {
         this.userService = new UserService();
         this.loginView = new LoginView();
-        this.customerMainView = new CustomerView();
         this.loginView.setVisible(true);
         initListeners();
     }
@@ -26,22 +22,24 @@ public class LoginController {
         loginView.addRegisterListener(e -> backToRegister());
     }
 
-    public void login() {
+    public void login(){
         String username = loginView.getUsername();
         String password = loginView.getPassword();
-        try {
+        try{
             userService.login(username, password);
-
-            // 1. Hiển thị thông báo
             loginView.showMessage("Login successful with role: " + Session.getInstance().getRole() + " id: " + Session.getInstance().getId());
-
-            ProductView productView = new ProductView();
-            productView.setVisible(true);
-        } catch (RuntimeException e) {
+            if (Session.getInstance().getRole().equals("admin")) {
+                new OrderController();
+                loginView.dispose();
+            }
+            else{
+                new CustomerMainController();
+                loginView.dispose();
+            }
+        }catch (RuntimeException e) {
             loginView.showError(e.getMessage());
         }
     }
-
 
     public void backToRegister(){
         loginView.dispose();

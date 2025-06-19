@@ -1,5 +1,6 @@
 package com.bach.model;
 
+import com.bach.patterns.userbuilder.AdminBuilder;
 import jdk.jshell.Snippet;
 
 public class Admin {
