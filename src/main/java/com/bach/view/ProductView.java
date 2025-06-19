@@ -56,25 +56,25 @@ public class ProductView extends JFrame {
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         gbc.gridx = 0; gbc.gridy = 0;
-        formPanel.add(new JLabel("Name:"), gbc);
+        formPanel.add(new JLabel("Tên sản phẩm:"), gbc);
         gbc.gridx = 1;
         txtName = new JTextField(20);
         formPanel.add(txtName, gbc);
 
         gbc.gridx = 0; gbc.gridy++;
-        formPanel.add(new JLabel("Description:"), gbc);
+        formPanel.add(new JLabel("Mô tả:"), gbc);
         gbc.gridx = 1;
         txtDesc = new JTextField(20);
         formPanel.add(txtDesc, gbc);
 
         gbc.gridx = 0; gbc.gridy++;
-        formPanel.add(new JLabel("Price:"), gbc);
+        formPanel.add(new JLabel("Giá:"), gbc);
         gbc.gridx = 1;
         txtPrice = new JTextField(20);
         formPanel.add(txtPrice, gbc);
 
         gbc.gridx = 0; gbc.gridy++;
-        formPanel.add(new JLabel("Supplier:"), gbc);
+        formPanel.add(new JLabel("Nhà cung cấp:"), gbc);
         gbc.gridx = 1;
         cboSupplier = new JComboBox<>(new String[]{
                 "1 - Công ty A", "2 - Nhà cung cấp B", "3 - Supplier C"
@@ -90,7 +90,7 @@ public class ProductView extends JFrame {
         formPanel.add(cboAdmin, gbc);
 
         gbc.gridx = 0; gbc.gridy++;
-        formPanel.add(new JLabel("State:"), gbc);
+        formPanel.add(new JLabel("Trạng thái:"), gbc);
         gbc.gridx = 1;
         JPanel statePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 0));
         rdoBasic = new JRadioButton("Basic", true);
@@ -112,7 +112,7 @@ public class ProductView extends JFrame {
 
         model = new DefaultTableModel(
                 new Object[][]{},
-                new String[]{"ID", "Supplier", "Name", "Desc", "Price", "State", "Admin"}
+                new String[]{"ID_SP", "ID_NCC", "Tên SP", "Mô tả", "Giá", "Trạng thái", "ID_Admin"}
         );
         tblProducts = new JTable(model);
         JScrollPane scrollPane = new JScrollPane(tblProducts);
