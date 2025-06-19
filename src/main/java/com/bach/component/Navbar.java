@@ -20,6 +20,7 @@ public class Navbar extends JPanel {
         add(new DivComponent(NavItem.VOUCHER.getTitle(), () -> Navigator.navigate(NavItem.VOUCHER, currentFrame)));
         add(new DivComponent(NavItem.POINTS.getTitle(), () -> Navigator.navigate(NavItem.POINTS, currentFrame)));
         add(new DivComponent(NavItem.PRODUCT.getTitle(), () -> Navigator.navigate(NavItem.PRODUCT, currentFrame)));
+        add(new DivComponent(NavItem.DISCOUNT.getTitle(), () -> Navigator.navigate(NavItem.DISCOUNT, currentFrame)));
         add(new DivComponent(NavItem.EXIT.getTitle(), () -> Navigator.navigate(NavItem.EXIT, currentFrame)));
         add(new DivComponent(NavItem.EVENT.getTitle(), () -> Navigator.navigate(NavItem.EVENT, currentFrame)));
         JButton invoiceButton = new JButton("Hóa Đơn");
@@ -51,7 +52,9 @@ public class Navbar extends JPanel {
         INVOICEPURCHASE(""),
         EVENT("Sự kện"),
         CREATE_SUPPLIER("Tạo nhà cung cấp"),
-        PRODUCT("Sản phẩm"),;
+        PRODUCT("Sản phẩm"),
+        DISCOUNT("Khuyến mãi"),
+        ;
         private final String title;
 
         NavItem(String title) {

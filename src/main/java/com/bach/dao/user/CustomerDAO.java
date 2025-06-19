@@ -101,6 +101,7 @@ public class CustomerDAO {
 
     }
 
+
     public List<Customer> getAllCustomers() {
         List<Customer> customers = new ArrayList<>();
         String sql = "SELECT * FROM customers";

@@ -22,30 +22,28 @@ public class RegisterController {
         registerView.addLoginListener(e -> backToLogin());
     }
 
-    public void register(){
-        if(registerView.getUsername().isEmpty() ||
-           registerView.getPassword().isEmpty() ||
-           registerView.getFullName().isEmpty() ||
-           registerView.getPhone().isEmpty() ||
-           registerView.getAddress().isEmpty() ||
-           registerView.getDateOfBirth() == null) {
-                registerView.showError("All fields are required");
-                return;
+    public void register() {
+        if (!registerView.isValidInput()) {
+            return; // Dừng lại nếu dữ liệu không hợp lệ
         }
+
+
         try {
             CustomerBuilder builder = new CustomerBuilder();
             UserDirector director = new UserDirector();
             director.createCustomerFromRegisterView(builder, registerView);
             userService.register(builder.getResult());
-            registerView.showMessage("Registration successful, please login to use our services");
+
+            registerView.showMessage("Đăng ký thành công! Vui lòng đăng nhập để sử dụng dịch vụ.");
+            registerView.dispose();
+            new LoginController();
         } catch (RuntimeException e) {
-            registerView.showError(e.getMessage());
+            registerView.showError("Lỗi: " + e.getMessage());
         }
     }
 
-    public void backToLogin(){
+    public void backToLogin() {
         registerView.dispose();
         new LoginController();
     }
-
 }

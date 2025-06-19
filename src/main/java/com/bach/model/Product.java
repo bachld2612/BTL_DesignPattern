@@ -10,6 +10,7 @@ public class Product {
     private int adminId;
 
     public Product() {
+        
     }
 
     public Product(int id, String name, String description, double price, String state, int supplierId, int adminId) {

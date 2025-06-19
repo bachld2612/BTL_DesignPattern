@@ -1,6 +1,6 @@
 package com.bach.model.product;
 
-public class BasicProduct extends Product {
+public class BasicProduct extends Product1 {
 
     public BasicProduct( int supplierId, String name, String description, double price, String state, int adminId) {
         super( supplierId, name, description, price, state, adminId);

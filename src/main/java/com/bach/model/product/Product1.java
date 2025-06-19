@@ -1,6 +1,6 @@
 package com.bach.model.product;
 
-public abstract class Product {
+public abstract class Product1 {
     protected int id_products;
     protected int supplierId;
     protected String name;
@@ -9,7 +9,10 @@ public abstract class Product {
     protected String state;
     protected int adminId;
 
-    public Product( int supplierId, String name, String description, double price, String state, int adminId) {
+    public Product1() {
+    }
+
+    public Product1( int supplierId, String name, String description, double price, String state, int adminId) {
         this.supplierId = supplierId;
         this.name = name;
         this.description = description;
@@ -18,7 +21,7 @@ public abstract class Product {
         this.adminId = adminId;
     }
 
-    public Product( int id_products , int supplierId, String name, String description, double price, String state, int adminId) {
+    public Product1( int id_products , int supplierId, String name, String description, double price, String state, int adminId) {
         this.id_products = id_products;
         this.supplierId = supplierId;
         this.name = name;
@@ -83,4 +86,6 @@ public abstract class Product {
     public void setAdminId(int adminId) {
         this.adminId = adminId;
     }
+
+
 }

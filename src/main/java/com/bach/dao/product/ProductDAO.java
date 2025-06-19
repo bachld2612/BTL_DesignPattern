@@ -1,18 +1,52 @@
 package com.bach.dao.product;
-
+import com.bach.dao.ConnectionManager;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.bach.dao.ConnectionManager;
 import com.bach.model.product.BasicProductFactory;
 import com.bach.model.product.PremiumProductFactory;
-import com.bach.model.product.Product;
+import com.bach.model.Product;
+import com.bach.model.product.Product1;
 import com.bach.model.product.ProductFactory;
 
 public class ProductDAO {
-    public List<Product> findAll() {
-        List<Product> danhSach = new ArrayList<>();
+
+    public List<Product> getAllProducts() {
+        List<Product> list = new ArrayList<>();
+        String sql = "SELECT * FROM products";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
+            while (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getInt("id_products"));
+                p.setName(rs.getString("name_products"));
+                p.setDescription(rs.getString("description"));
+                p.setPrice(rs.getFloat("price"));
+                p.setState(rs.getString("state"));
+                list.add(p);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    public void updatePrice(int productId, float newPrice) {
+        String sql = "UPDATE products SET price = ? WHERE id_products = ?";
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setFloat(1, newPrice);
+            stmt.setInt(2, productId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public List<Product1> findAll() {
+        List<Product1> danhSach = new ArrayList<>();
         String sql = "SELECT * FROM products";
 
         try (Connection conn = ConnectionManager.getConnection();
@@ -36,7 +70,7 @@ public class ProductDAO {
                     factory = new BasicProductFactory();
                 }
 
-                Product product = factory.createProduct(id , supId, name, desc, price, state, adminId);
+                Product1 product = factory.createProduct(id , supId, name, desc, price, state, adminId);
                 danhSach.add(product);
             }
 
@@ -48,7 +82,7 @@ public class ProductDAO {
     }
 
 
-    public void insert(Product product) {
+    public void insert(Product1 product) {
         String sql = "INSERT INTO products (id_suppliers, name_products, description, price, state, id_admin) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection conn = ConnectionManager.getConnection();
@@ -69,7 +103,7 @@ public class ProductDAO {
     }
 
 
-    public void update(Product product) {
+    public void update(Product1 product) {
         String sql = "UPDATE products SET id_suppliers = ?, name_products = ?, description = ?, price = ?, state = ?, id_admin = ? WHERE id_products = ?";
 
         try (Connection conn = ConnectionManager.getConnection();
@@ -103,6 +137,5 @@ public class ProductDAO {
             e.printStackTrace();
         }
     }
-
 
 }
