@@ -7,6 +7,7 @@ import com.bach.service.CartService;
 import com.bach.service.OrderService;
 import com.bach.service.CustomerService;
 import com.bach.component.Navbar;
+import com.bach.model.Order;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -31,6 +32,10 @@ public class OrderView extends JFrame {
     private double totalAmount;
     private double discountAmount;
     private String currentLevel = "BRONZE";
+    private JLabel orderStatusLabel;
+    private JButton payButton, shipButton, completeButton, cancelButton;
+    private JButton orderButton;
+    private Order currentOrder;
 
     // Thêm interface lồng bên trong View (hoặc có thể tách file riêng nếu muốn)
     public interface OrderListener {
@@ -151,7 +156,7 @@ public class OrderView extends JFrame {
         // Button row
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         buttonPanel.setOpaque(false);
-        JButton orderButton = new JButton("Đặt hàng");
+        orderButton = new JButton("Đặt hàng");
         orderButton.setFont(new Font("Segoe UI", Font.BOLD, 14));
         orderButton.setBackground(new Color(0, 120, 215));
         orderButton.setForeground(Color.WHITE);
@@ -165,10 +170,42 @@ public class OrderView extends JFrame {
                 int voucherIndex = voucherComboBox.getSelectedIndex();
                 double finalAmount = Double.parseDouble(finalAmountField.getText().replace(" VND", "").replace(",", "").trim());
                 orderListener.onOrder(paymentMethod, note, cartId, voucherIndex, finalAmount);
+                // Lấy order mới nhất của customer
+                currentOrder = orderService.getLatestOrderForCustomer(customerId);
+                updateOrderStatusUI();
+                // Disable các mục chọn voucher, phương thức thanh toán và nút đặt hàng
+                voucherComboBox.setEnabled(false);
+                paymentMethodCombo.setEnabled(false);
+                orderButton.setEnabled(false);
             }
         });
         buttonPanel.add(orderButton);
+
+        // Thêm các nút thao tác trạng thái
+        payButton = new JButton("Thanh toán");
+        payButton.addActionListener(e -> handlePayOrder());
+        buttonPanel.add(payButton);
+        shipButton = new JButton("Giao hàng");
+        shipButton.addActionListener(e -> handleShipOrder());
+        buttonPanel.add(shipButton);
+        completeButton = new JButton("Hoàn thành");
+        completeButton.addActionListener(e -> handleCompleteOrder());
+        buttonPanel.add(completeButton);
+        cancelButton = new JButton("Huỷ đơn");
+        cancelButton.addActionListener(e -> handleCancelOrder());
+        buttonPanel.add(cancelButton);
+        // Ban đầu disable các nút trạng thái
+        payButton.setEnabled(false);
+        shipButton.setEnabled(false);
+        completeButton.setEnabled(false);
+        cancelButton.setEnabled(false);
+
         infoPanel.add(buttonPanel);
+
+        // Thêm label hiển thị trạng thái đơn hàng
+        orderStatusLabel = new JLabel("Trạng thái: PENDING");
+        orderStatusLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        infoPanel.add(orderStatusLabel);
 
         contentPanel.add(infoPanel, BorderLayout.CENTER);
         add(contentPanel, BorderLayout.CENTER);
@@ -177,7 +214,7 @@ public class OrderView extends JFrame {
 
         //setid customer
 //        int customerId = Session.getInstance().getId();
-        setCustomerId(1);
+        setCustomerId(2);
     }
 
     public void setCustomerId(int customerId) {
@@ -258,5 +295,63 @@ public class OrderView extends JFrame {
 
     public int getCustomerId() {
         return customerId;
+    }
+
+    // Thêm các hàm thao tác trạng thái
+    private void handlePayOrder() {
+        if (currentOrder != null) {
+            orderService.payOrder(currentOrder);
+            currentOrder = orderService.getLatestOrderForCustomer(customerId);
+            updateOrderStatusUI();
+            loadCartData();
+            JOptionPane.showMessageDialog(this, "Đã thanh toán đơn hàng!");
+        }
+    }
+    private void handleShipOrder() {
+        if (currentOrder != null) {
+            orderService.shipOrder(currentOrder);
+            currentOrder = orderService.getLatestOrderForCustomer(customerId);
+            updateOrderStatusUI();
+            JOptionPane.showMessageDialog(this, "Đã giao hàng!");
+        }
+    }
+    private void handleCompleteOrder() {
+        if (currentOrder != null) {
+            orderService.completeOrder(currentOrder);
+            currentOrder = orderService.getLatestOrderForCustomer(customerId);
+            updateOrderStatusUI();
+            setCustomerId(customerId); // Gọi lại để reload toàn bộ UI liên quan đến giỏ hàng
+            JOptionPane.showMessageDialog(this, "Đơn hàng đã hoàn thành!");
+        }
+    }
+    private void handleCancelOrder() {
+        if (currentOrder != null) {
+            orderService.cancelOrder(currentOrder);
+            currentOrder = orderService.getLatestOrderForCustomer(customerId);
+            updateOrderStatusUI();
+            // Enable lại các mục chọn voucher, phương thức thanh toán và nút đặt hàng
+            voucherComboBox.setEnabled(true);
+            paymentMethodCombo.setEnabled(true);
+            orderButton.setEnabled(true);
+            JOptionPane.showMessageDialog(this, "Đơn hàng đã huỷ!");
+        }
+    }
+    private void updateOrderStatusUI() {
+        if (currentOrder != null) {
+            orderStatusLabel.setText("Trạng thái: " + currentOrder.getStatus());
+            payButton.setEnabled(currentOrder.getState() instanceof com.bach.patterns.state.PendingOrderState);
+            shipButton.setEnabled(currentOrder.getState() instanceof com.bach.patterns.state.PaidOrderState);
+            completeButton.setEnabled(currentOrder.getState() instanceof com.bach.patterns.state.ShippedOrderState);
+            cancelButton.setEnabled(
+                currentOrder.getState() instanceof com.bach.patterns.state.PendingOrderState ||
+                currentOrder.getState() instanceof com.bach.patterns.state.PaidOrderState
+            );
+        } else {
+            orderStatusLabel.setText("Trạng thái: (chưa có đơn hàng)");
+            payButton.setEnabled(false);
+            shipButton.setEnabled(false);
+            completeButton.setEnabled(false);
+            cancelButton.setEnabled(false);
+        }
     }
 }

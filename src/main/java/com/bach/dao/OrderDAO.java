@@ -1,6 +1,8 @@
 package com.bach.dao;
 
 import java.sql.*;
+import com.bach.model.Order;
+import java.util.Date;
 
 public class OrderDAO {
     public int createBooking(Connection conn, int customerId, int cartId, double totalAmount) throws SQLException {
@@ -57,5 +59,76 @@ public class OrderDAO {
             ConnectionManager.closeQuietly(stmt);
             ConnectionManager.closeQuietly(conn);
         }
+    }
+
+    public void updateOrderStatus(int orderId, String status) {
+        String sql = "UPDATE orders SET status = ? WHERE id_orders = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, status);
+            stmt.setInt(2, orderId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.closeQuietly(stmt);
+            ConnectionManager.closeQuietly(conn);
+        }
+    }
+
+    public Order getLatestOrderForCustomer(int customerId) {
+        String sql = "SELECT * FROM orders WHERE id_bookings IN (SELECT id_bookings FROM bookings WHERE id_customers = ?) ORDER BY id_orders DESC LIMIT 1";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, customerId);
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                int id = rs.getInt("id_orders");
+                int bookingId = rs.getInt("id_bookings");
+                Date orderDate = rs.getDate("order_date");
+                double totalAmount = rs.getDouble("total_amount");
+                String status = rs.getString("status");
+                String paymentMethod = rs.getString("payment_method");
+                String note = rs.getString("note");
+                return new Order(id, bookingId, orderDate, totalAmount, status, paymentMethod, note);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.closeQuietly(rs);
+            ConnectionManager.closeQuietly(stmt);
+            ConnectionManager.closeQuietly(conn);
+        }
+        return null;
+    }
+
+    public int getCustomerIdByOrder(Order order) {
+        String sql = "SELECT id_customers FROM bookings WHERE id_bookings = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, order.getBookingId());
+            rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("id_customers");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.closeQuietly(rs);
+            ConnectionManager.closeQuietly(stmt);
+            ConnectionManager.closeQuietly(conn);
+        }
+        return -1;
     }
 } 

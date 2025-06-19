@@ -109,4 +109,22 @@ public class CartService {
         }
         return -1;
     }
+
+    public void clearCart(int customerId) {
+        int cartId = getOrCreateCart(customerId);
+        String sql = "DELETE FROM product_carts WHERE id_carts = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, cartId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.closeQuietly(stmt);
+            ConnectionManager.closeQuietly(conn);
+        }
+    }
 } 

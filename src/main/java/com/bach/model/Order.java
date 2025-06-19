@@ -1,6 +1,7 @@
 package com.bach.model;
 
 import java.util.Date;
+import com.bach.patterns.state.*;
 
 public class Order {
     private int id;
@@ -12,6 +13,7 @@ public class Order {
     private String note;
     private IVoucher appliedVoucher;
     private double finalAmount;
+    private OrderState state;
 
     public Order(int id, int bookingId, Date orderDate, double totalAmount, 
                 String status, String paymentMethod, String note) {
@@ -23,6 +25,18 @@ public class Order {
         this.paymentMethod = paymentMethod;
         this.note = note;
         this.finalAmount = totalAmount;
+        this.state = stateFromStatus(status);
+    }
+
+    private OrderState stateFromStatus(String status) {
+        if (status == null) return new PendingOrderState();
+        switch (status.toUpperCase()) {
+            case "PAID": return new PaidOrderState();
+            case "SHIPPED": return new ShippedOrderState();
+            case "COMPLETED": return new CompletedOrderState();
+            case "CANCELED": return new CanceledOrderState();
+            default: return new PendingOrderState();
+        }
     }
 
     public void applyVoucher(IVoucher voucher) {
@@ -34,6 +48,18 @@ public class Order {
             this.finalAmount = totalAmount;
         }
     }
+
+    public void setState(OrderState state) {
+        this.state = state;
+    }
+    public OrderState getState() {
+        return state;
+    }
+
+    public void pay() { state.pay(this); }
+    public void ship() { state.ship(this); }
+    public void complete() { state.complete(this); }
+    public void cancel() { state.cancel(this); }
 
     // Getters and setters
     public int getId() { return id; }
@@ -49,7 +75,10 @@ public class Order {
     public void setTotalAmount(double totalAmount) { this.totalAmount = totalAmount; }
     
     public String getStatus() { return status; }
-    public void setStatus(String status) { this.status = status; }
+    public void setStatus(String status) {
+        this.status = status;
+        this.state = stateFromStatus(status);
+    }
     
     public String getPaymentMethod() { return paymentMethod; }
     public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
