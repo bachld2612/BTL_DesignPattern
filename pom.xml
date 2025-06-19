@@ -15,7 +15,7 @@
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.33</version>
         </dependency>
-
+        
     </dependencies>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>

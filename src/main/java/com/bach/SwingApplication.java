@@ -1,21 +1,26 @@
 package com.bach;
 
-
-import com.bach.controller.CustomerMainController;
-import com.bach.controller.EventController;
 import com.bach.controller.LoginController;
-import com.bach.controller.NotificationController;
-import com.bach.view.CustomerMainView;
-import com.bach.view.EventView;
-import com.bach.view.LoginView;
-import com.bach.view.NotificationView;
+import com.bach.view.OrderView;
+import com.bach.view.VoucherManagementView;
 
 import javax.swing.*;
 
 public class SwingApplication {
+    private static OrderView orderView;
+    private static VoucherManagementView voucherView;
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
+            // Khởi tạo các view
+
+
+            // Hiển thị giao diện đặt hàng
+//             showOrderView();
+//             showVoucherManagementView();
             new LoginController();
         });
+
     }
+
 }
