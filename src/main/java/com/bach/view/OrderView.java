@@ -215,7 +215,8 @@ public class OrderView extends JFrame {
 
         //setid customer
 //        int customerId = Session.getInstance().getId();
-        setCustomerId(1);
+        int customerId = Session.getInstance().getId(); 
+        setCustomerId(customerId);
     }
 
     public void setCustomerId(int customerId) {

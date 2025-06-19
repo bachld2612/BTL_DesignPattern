@@ -30,6 +30,7 @@ public class VoucherManagementView extends JFrame {
     private List<Customer> customers;
     private Navbar navbar;
     private JButton editButton, deleteButton;
+    private JLabel valueLabel;
 
     public VoucherManagementView() {
         orderService = OrderService.getInstance();
@@ -134,10 +135,11 @@ public class VoucherManagementView extends JFrame {
         discountTypeCombo = new JComboBox<>(types);
         discountTypeCombo.setFont(new Font("Arial", Font.PLAIN, 16));
         formPanel.add(discountTypeCombo, gbc);
+        discountTypeCombo.addActionListener(e -> updateDiscountValueLabel());
 
         // Discount Value
         gbc.gridx = 0; gbc.gridy = 5;
-        JLabel valueLabel = new JLabel("Giá trị giảm:");
+        valueLabel = new JLabel("% giảm giá:");
         valueLabel.setFont(new Font("Arial", Font.PLAIN, 16));
         formPanel.add(valueLabel, gbc);
         gbc.gridx = 1;
@@ -206,6 +208,15 @@ public class VoucherManagementView extends JFrame {
         voucherTable.getSelectionModel().addListSelectionListener(e -> fillVoucherFormFromTable());
     }
 
+    private void updateDiscountValueLabel() {
+        String type = (String) discountTypeCombo.getSelectedItem();
+        if ("Phần trăm".equals(type)) {
+            valueLabel.setText("% giảm giá:");
+        } else {
+            valueLabel.setText("Số tiền giảm:");
+        }
+    }
+
     private void createVoucher() {
         try {
             String code = codeField.getText().trim();
@@ -216,10 +227,18 @@ public class VoucherManagementView extends JFrame {
             double discountValue = Double.parseDouble(discountValueField.getText().trim());
 
             IVoucher voucher;
-            if ("Percentage".equals(discountType)) {
+            if ("Phần trăm".equals(discountType)) {
+                if (discountValue <= 0 || discountValue > 100) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập phần trăm giảm giá từ 1 đến 100!");
+                    return;
+                }
                 voucher = new PercentageVoucherFactory().createVoucher(
                     vouchers.size() + 1, code, name, startValue, endValue, discountValue);
             } else {
+                if (discountValue <= 0) {
+                    JOptionPane.showMessageDialog(this, "Vui lòng nhập số tiền giảm lớn hơn 0!");
+                    return;
+                }
                 voucher = new FixedAmountVoucherFactory().createVoucher(
                     vouchers.size() + 1, code, name, startValue, endValue, discountValue);
             }
