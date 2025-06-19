@@ -15,12 +15,10 @@ CREATE TABLE admin (
 CREATE TABLE suppliers (
                            id_suppliers INT AUTO_INCREMENT PRIMARY KEY,
                            id_admin INT,
-                           username_sup VARCHAR(50),
-                           password_sup VARCHAR(50),
-                           name_sup VARCHAR(100),
                            phone VARCHAR(15),
-                           start_date DATE,
-                           end_date DATE,
+                           address VARCHAR(255),
+                           email VARCHAR(100),
+                           name VARCHAR(100),
                            FOREIGN KEY (id_admin) REFERENCES admin(id_admin)
 );
 
@@ -156,6 +154,37 @@ CREATE TABLE sales_bills (
                              FOREIGN KEY (id_orders) REFERENCES orders(id_orders)
 );
 
+CREATE TABLE discount (
+                          id INT AUTO_INCREMENT PRIMARY KEY,
+                          product_id INT NOT NULL,
+                          discount_type ENUM('percent', 'amount') DEFAULT 'percent',
+                          value FLOAT NOT NULL,
+                          start_date DATE,
+                          end_date DATE,
+                          FOREIGN KEY (product_id) REFERENCES products(id_products) ON DELETE CASCADE
+);
+
+GO
+
+CREATE TABLE customer_event_subscriptions (
+                                              id_subscription INT PRIMARY KEY AUTO_INCREMENT,
+                                              id_customer INT,
+                                              FOREIGN KEY (id_customer) REFERENCES customers(id_customers)
+);
+
+GO
+CREATE TABLE notifications (
+                               id_notification INT PRIMARY KEY AUTO_INCREMENT,
+                               id_customer INT,
+                               id_event INT,
+                               message TEXT,
+                               sent_at DATETIME,
+                               status VARCHAR(20),
+                               FOREIGN KEY (id_customer) REFERENCES customers(id_customers),
+                               FOREIGN KEY (id_event) REFERENCES events(id_events)
+);
+
+GO
 -- Thêm tài khoản admin mặc định
 INSERT INTO admin (username, password, full_name, phone)
 VALUES ('admin', 'admin', 'Administrator', '0123456789');

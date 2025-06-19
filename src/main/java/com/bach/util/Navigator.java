@@ -4,6 +4,9 @@ import com.bach.component.Navbar;
 import com.bach.controller.LoginController;
 import com.bach.controller.OrderController;
 import com.bach.controller.RegisterController;
+import com.bach.controller.supplier.CreateSupplierController;
+import com.bach.controller.supplier.SupplierController;
+import com.bach.view.SupplierView;
 import com.bach.controller.VoucherManagementController;
 import com.bach.view.VoucherManagementView;
 import com.bach.view.PointsManagementView;
@@ -37,6 +40,15 @@ public class Navigator {
             case EXIT:
                 currentFrame.dispose();
                 System.exit(0);
+                break;
+            case SUPPLIER:
+                currentFrame.dispose();
+                new SupplierController();
+                break;
+
+            case CREATE_SUPPLIER:
+                currentFrame.dispose();
+                new CreateSupplierController();
                 break;
             default:
                 throw new IllegalArgumentException("Unknown navigation item: " + navItem);
