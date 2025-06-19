@@ -151,6 +151,8 @@ CREATE TABLE vouchers (
                           end_value DECIMAL(10, 2),
                           is_active BOOLEAN,
                           code VARCHAR(20),
+                          discount_type VARCHAR(20),
+                          discount_value DOUBLE,
                           FOREIGN KEY (id_admin) REFERENCES admin(id_admin),
                           FOREIGN KEY (id_order) REFERENCES orders(id_orders)
 );
