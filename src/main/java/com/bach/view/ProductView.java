@@ -1,5 +1,6 @@
 package com.bach.view;
 
+import com.bach.component.Navbar;
 import com.bach.controller.ProductController;
 import com.bach.model.product.BasicProductFactory;
 import com.bach.model.product.PremiumProductFactory;
@@ -28,10 +29,22 @@ public class ProductView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
 
+        // --- THÊM NAVBAR VÀO TRÊN CÙNG ---
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BorderLayout());
+
+        // Navbar nằm phía trên
+        Navbar navbar = new Navbar(this);
+        topPanel.add(navbar, BorderLayout.NORTH);
+
+        // Tiêu đề nằm dưới navbar
         JLabel lblTitle = new JLabel("QUẢN LÝ SẢN PHẨM", SwingConstants.CENTER);
         lblTitle.setFont(new Font("Arial", Font.BOLD, 20));
         lblTitle.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
-        add(lblTitle, BorderLayout.NORTH);
+        topPanel.add(lblTitle, BorderLayout.SOUTH);
+
+        // Thêm cả navbar và tiêu đề vào phần NORTH
+        add(topPanel, BorderLayout.NORTH);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -183,10 +196,21 @@ public class ProductView extends JFrame {
 
     private Product buildProductFromForm() {
         try {
+            String name = txtName.getText().trim();
+            String desc = txtDesc.getText().trim();
+            String priceStr = txtPrice.getText().trim();
+
+            // Kiểm tra dữ liệu nhập vào
+            if (name.isEmpty() || desc.isEmpty() || priceStr.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Vui lòng nhập đầy đủ các trường: Tên, Mô tả và Giá!",
+                        "Thiếu thông tin",
+                        JOptionPane.WARNING_MESSAGE);
+                return null;
+            }
+
             int supplierId = Integer.parseInt(cboSupplier.getSelectedItem().toString().split(" - ")[0]);
-            String name = txtName.getText();
-            String desc = txtDesc.getText();
-            double price = Double.parseDouble(txtPrice.getText());
+            double price = Double.parseDouble(priceStr);
             String state = rdoPremium.isSelected() ? "Premium" : "Basic";
             int adminId = Integer.parseInt(cboAdmin.getSelectedItem().toString().split(" - ")[0]);
 
@@ -195,11 +219,21 @@ public class ProductView extends JFrame {
                     : new BasicProductFactory();
 
             return factory.createProduct(supplierId, name, desc, price, state, adminId);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                    "Giá sản phẩm phải là một số hợp lệ!",
+                    "Lỗi định dạng",
+                    JOptionPane.ERROR_MESSAGE);
+            return null;
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, "Dữ liệu nhập không hợp lệ!", "Lỗi", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Dữ liệu nhập không hợp lệ!",
+                    "Lỗi",
+                    JOptionPane.ERROR_MESSAGE);
             return null;
         }
     }
+
 
     private void clearForm() {
         txtName.setText("");
