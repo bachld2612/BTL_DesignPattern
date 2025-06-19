@@ -22,25 +22,44 @@ public class LoginController {
         loginView.addRegisterListener(e -> backToRegister());
     }
 
-    public void login(){
-        String username = loginView.getUsername();
-        String password = loginView.getPassword();
+    public void login() {
+        String username = loginView.getUsername().trim();
+        String password = loginView.getPassword().trim();
+
+        // E-1: Chưa nhập username
+        if (username.isEmpty()) {
+            loginView.showError("Vui lòng nhập tài khoản");
+            return;
+        }
+
+        // E-2: Chưa nhập password
+        if (password.isEmpty()) {
+            loginView.showError("Vui lòng nhập mật khẩu");
+            return;
+        }
+
         try {
+            // Thử đăng nhập (có thể ném RuntimeException nếu sai)
             userService.login(username, password);
 
-            // Kiểm tra nếu là admin thì mở giao diện giảm giá
-            if ("admin".equals(com.bach.patterns.sessionsingleton.Session.getInstance().getRole())) {
-                loginView.dispose(); // Đóng cửa sổ đăng nhập
+            String role = com.bach.patterns.sessionsingleton.Session.getInstance().getRole();
+
+            if ("admin".equalsIgnoreCase(role)) {
+                loginView.dispose();
                 new AdminDiscountView().setVisible(true);
-            } else {
+            } else if ("customer".equalsIgnoreCase(role)) {
                 loginView.showMessage("Bạn đã đăng nhập thành công với vai trò khách hàng.");
-                // TODO: mở giao diện khác cho customer nếu muốn
+                // TODO: chuyển sang giao diện chính của customer nếu cần
+            } else {
+                loginView.showMessage("Đăng nhập thành công!");
             }
 
         } catch (RuntimeException ex) {
-            loginView.showError(ex.getMessage());
+            // E-3: Sai tài khoản hoặc mật khẩu
+            loginView.showError("Tên đăng nhập hoặc mật khẩu không chính xác. Vui lòng kiểm tra lại");
         }
     }
+
 
     public void backToRegister(){
         loginView.dispose();

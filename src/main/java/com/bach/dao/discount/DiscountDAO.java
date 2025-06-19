@@ -61,4 +61,20 @@ public class DiscountDAO {
         }
     }
 
+    public void deleteDiscountByProductId(int productId) {
+        String sql = "DELETE FROM discount WHERE product_id = ?";
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, productId);
+            stmt.executeUpdate();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }

@@ -3,10 +3,10 @@ package com.bach.view;
 import com.bach.dao.discount.DiscountDAO;
 import com.bach.model.Discount;
 import com.bach.model.Product;
-import com.bach.service.ProductService;
 import com.bach.patterns.decorator.ConcreteProduct;
 import com.bach.patterns.decorator.DiscountDecorator;
 import com.bach.patterns.decorator.ProductComponent;
+import com.bach.service.ProductService;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,45 +16,55 @@ import java.util.List;
 
 public class AdminDiscountView extends JFrame {
     private JTable table;
-    private JTextField discountField, startDateField, endDateField;
+    private JTextField discountField;
     private JComboBox<String> discountTypeBox;
+    private JSpinner startDateSpinner, endDateSpinner;
     private ProductService productService;
     private DiscountDAO discountDAO;
 
     public AdminDiscountView() {
         setTitle("Thêm giảm giá sản phẩm");
-        setSize(1100, 500);
+        setSize(1150, 550);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
         productService = new ProductService();
         discountDAO = new DiscountDAO();
 
-        // Giao diện bảng hiển thị sản phẩm và giảm giá
         String[] cols = {"ID", "Tên", "Giá gốc", "Mô tả", "Loại giảm", "Giá trị", "Bắt đầu", "Kết thúc", "Giá sau giảm"};
         table = new JTable(new javax.swing.table.DefaultTableModel(new String[0][0], cols));
         refreshTable();
         JScrollPane scroll = new JScrollPane(table);
 
-        // Giao diện nhập liệu giảm giá
         discountField = new JTextField(5);
-        startDateField = new JTextField(10); // yyyy-MM-dd
-        endDateField = new JTextField(10);
-        discountTypeBox = new JComboBox<>(new String[]{"percent", "amount"});
+        discountTypeBox = new JComboBox<>(new String[]{"Phần trăm", "Số tiền"});
+
+        // Sử dụng JSpinner để chọn ngày
+        SpinnerDateModel startModel = new SpinnerDateModel(new Date(), null, null, java.util.Calendar.DAY_OF_MONTH);
+        startDateSpinner = new JSpinner(startModel);
+        startDateSpinner.setEditor(new JSpinner.DateEditor(startDateSpinner, "yyyy-MM-dd"));
+
+        SpinnerDateModel endModel = new SpinnerDateModel(new Date(), null, null, java.util.Calendar.DAY_OF_MONTH);
+        endDateSpinner = new JSpinner(endModel);
+        endDateSpinner.setEditor(new JSpinner.DateEditor(endDateSpinner, "yyyy-MM-dd"));
 
         JButton applyBtn = new JButton("Áp dụng giảm giá");
         applyBtn.addActionListener(e -> applyDiscount());
+
+        JButton deleteBtn = new JButton("Xóa giảm giá");
+        deleteBtn.addActionListener(e -> deleteDiscount());
 
         JPanel bottom = new JPanel(new FlowLayout(FlowLayout.LEFT));
         bottom.add(new JLabel("Loại:"));
         bottom.add(discountTypeBox);
         bottom.add(new JLabel("Giá trị:"));
         bottom.add(discountField);
-        bottom.add(new JLabel("Bắt đầu (yyyy-MM-dd):"));
-        bottom.add(startDateField);
+        bottom.add(new JLabel("Bắt đầu:"));
+        bottom.add(startDateSpinner);
         bottom.add(new JLabel("Kết thúc:"));
-        bottom.add(endDateField);
+        bottom.add(endDateSpinner);
         bottom.add(applyBtn);
+        bottom.add(deleteBtn);
 
         add(scroll, BorderLayout.CENTER);
         add(bottom, BorderLayout.SOUTH);
@@ -67,31 +77,62 @@ public class AdminDiscountView extends JFrame {
             return;
         }
 
-        try {
-            int productId = Integer.parseInt(table.getValueAt(row, 0).toString());
-            float value = Float.parseFloat(discountField.getText());
+        String valueText = discountField.getText().trim();
+        if (valueText.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Vui lòng nhập giá trị giảm giá!");
+            return;
+        }
 
-            if (value < 0) {
-                JOptionPane.showMessageDialog(this, "Giá trị giảm giá không hợp lệ!");
+        float value;
+        try {
+            value = Float.parseFloat(valueText);
+            if (value <= 0) {
+                JOptionPane.showMessageDialog(this, "Giá trị giảm giá không được <= 0!");
                 return;
             }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Giá trị giảm giá phải là số!");
+            return;
+        }
 
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date start = sdf.parse(startDateField.getText());
-            Date end = sdf.parse(endDateField.getText());
+        // Lấy giá trị loại giảm và chuyển sang đúng định dạng lưu DB
+        String selectedType = (String) discountTypeBox.getSelectedItem();
+        String discountType;
+        if ("Phần trăm".equals(selectedType)) {
+            discountType = "percent";
+            if (value > 100) {
+                JOptionPane.showMessageDialog(this, "Phần trăm giảm giá không được vượt quá 100%!");
+                return;
+            }
+        } else if ("Số tiền".equals(selectedType)) {
+            discountType = "amount";
+        } else {
+            JOptionPane.showMessageDialog(this, "Loại giảm giá không hợp lệ!");
+            return;
+        }
 
-            // Kiểm tra xem có giảm giá chưa
+        Date start = (Date) startDateSpinner.getValue();
+        Date end = (Date) endDateSpinner.getValue();
+
+        if (end.before(start)) {
+            JOptionPane.showMessageDialog(this, "Ngày kết thúc phải sau ngày bắt đầu!");
+            return;
+        }
+
+        try {
+            int productId = Integer.parseInt(table.getValueAt(row, 0).toString());
+
             Discount existingDiscount = discountDAO.getActiveDiscount(productId);
 
             Discount d = new Discount();
             d.setProductId(productId);
-            d.setDiscountType((String) discountTypeBox.getSelectedItem());
+            d.setDiscountType(discountType); // đã map lại từ tiếng Việt
             d.setValue(value);
             d.setStartDate(start);
             d.setEndDate(end);
 
             if (existingDiscount != null) {
-                d.setId(existingDiscount.getId()); // Gán ID để update
+                d.setId(existingDiscount.getId());
                 discountDAO.updateDiscount(d);
                 JOptionPane.showMessageDialog(this, "Đã cập nhật giảm giá!");
             } else {
@@ -102,10 +143,27 @@ public class AdminDiscountView extends JFrame {
             refreshTable();
         } catch (Exception ex) {
             ex.printStackTrace();
-            JOptionPane.showMessageDialog(this, "Dữ liệu không hợp lệ: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Lỗi khi áp dụng giảm giá: " + ex.getMessage());
         }
     }
 
+
+    private void deleteDiscount() {
+        int row = table.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(this, "Vui lòng chọn sản phẩm!");
+            return;
+        }
+
+        int productId = Integer.parseInt(table.getValueAt(row, 0).toString());
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc chắn muốn xóa giảm giá không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            discountDAO.deleteDiscountByProductId(productId);
+            JOptionPane.showMessageDialog(this, "Đã xóa giảm giá!");
+            refreshTable();
+        }
+    }
 
     private void refreshTable() {
         List<Product> products = productService.getAll();
@@ -116,20 +174,26 @@ public class AdminDiscountView extends JFrame {
             Product product = products.get(i);
             Discount discount = discountDAO.getActiveDiscount(product.getId());
 
+            float originalPrice = product.getPrice();
+
             data[i][0] = String.valueOf(product.getId());
             data[i][1] = product.getName();
-            data[i][2] = String.format("%,.0f", product.getPrice());
+            data[i][2] = String.format("%,.0f", originalPrice);
             data[i][3] = product.getDescription();
 
             if (discount != null) {
-                data[i][4] = discount.getDiscountType();
+                String typeDisplay = switch (discount.getDiscountType()) {
+                    case "percent" -> "Phần trăm";
+                    case "amount" -> "Số tiền";
+                    default -> discount.getDiscountType(); // fallback
+                };
+                data[i][4] = typeDisplay;
+
                 data[i][5] = String.valueOf(discount.getValue());
                 data[i][6] = sdf.format(discount.getStartDate());
                 data[i][7] = sdf.format(discount.getEndDate());
 
-                // ✅ Tính giá sau giảm bằng Decorator
-                ProductComponent original = new ConcreteProduct(product.getName(), product.getPrice());
-                ProductComponent decorated = new DiscountDecorator(original, discount.getValue(), discount.getDiscountType());
+                ProductComponent decorated = new DiscountDecorator(new ConcreteProduct(product.getName(), originalPrice), discount.getValue(), discount.getDiscountType());
                 float finalPrice = Math.max(0, decorated.getPrice());
                 data[i][8] = String.format("%,.0f", finalPrice);
             } else {
@@ -144,5 +208,4 @@ public class AdminDiscountView extends JFrame {
         String[] cols = {"ID", "Tên", "Giá gốc", "Mô tả", "Loại giảm", "Giá trị", "Bắt đầu", "Kết thúc", "Giá sau giảm"};
         table.setModel(new javax.swing.table.DefaultTableModel(data, cols));
     }
-
 }
