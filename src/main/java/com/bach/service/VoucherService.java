@@ -28,4 +28,8 @@ public class VoucherService {
     public void deactivateVoucher(int voucherId) {
         voucherDAO.deactivateVoucher(voucherId);
     }
+
+    public void updateVoucher(IVoucher voucher) {
+        voucherDAO.updateVoucher(voucher);
+    }
 } 

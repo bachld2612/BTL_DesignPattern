@@ -94,4 +94,35 @@ public class VoucherDAO {
             ConnectionManager.closeQuietly(conn);
         }
     }
+
+    public void updateVoucher(IVoucher voucher) {
+        String sql = "UPDATE vouchers SET name_vouchers = ?, start_value = ?, end_value = ?, code = ?, discount_type = ?, discount_value = ? WHERE id_vouchers = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, voucher.getName());
+            stmt.setDouble(2, voucher.getStartValue());
+            stmt.setDouble(3, voucher.getEndValue());
+            stmt.setString(4, voucher.getCode());
+            if (voucher instanceof com.bach.model.PercentageVoucher) {
+                stmt.setString(5, "Percentage");
+                stmt.setDouble(6, ((com.bach.model.PercentageVoucher) voucher).getPercentage());
+            } else if (voucher instanceof com.bach.model.FixedAmountVoucher) {
+                stmt.setString(5, "Fixed Amount");
+                stmt.setDouble(6, ((com.bach.model.FixedAmountVoucher) voucher).getAmount());
+            } else {
+                stmt.setString(5, "Unknown");
+                stmt.setDouble(6, 0);
+            }
+            stmt.setInt(7, voucher.getId());
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.closeQuietly(stmt);
+            ConnectionManager.closeQuietly(conn);
+        }
+    }
 } 
