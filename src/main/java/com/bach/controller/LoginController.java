@@ -28,9 +28,13 @@ public class LoginController {
         try{
             userService.login(username, password);
             loginView.showMessage("Login successful with role: " + Session.getInstance().getRole() + " id: " + Session.getInstance().getId());
-            if(Session.getInstance().getRole().equals("admin")) {
+            if (Session.getInstance().getRole().equals("admin")) {
+                new OrderController();
                 loginView.dispose();
-                new CreateSupplierController();
+            }
+            else{
+                new CustomerMainController();
+                loginView.dispose();
             }
         }catch (RuntimeException e) {
             loginView.showError(e.getMessage());
