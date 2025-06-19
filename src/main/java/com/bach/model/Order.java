@@ -32,7 +32,6 @@ public class Order {
         if (status == null) return new PendingOrderState();
         switch (status.toUpperCase()) {
             case "PAID": return new PaidOrderState();
-            case "SHIPPED": return new ShippedOrderState();
             case "COMPLETED": return new CompletedOrderState();
             case "CANCELED": return new CanceledOrderState();
             default: return new PendingOrderState();
@@ -57,7 +56,6 @@ public class Order {
     }
 
     public void pay() { state.pay(this); }
-    public void ship() { state.ship(this); }
     public void complete() { state.complete(this); }
     public void cancel() { state.cancel(this); }
 

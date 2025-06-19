@@ -8,10 +8,7 @@ public class CompletedOrderState extends OrderState {
         throw new IllegalStateException("Order is already completed.");
     }
 
-    @Override
-    public void ship(Order order) {
-        throw new IllegalStateException("Order is already completed.");
-    }
+
 
     @Override
     public void complete(Order order) {

@@ -6,6 +6,7 @@ import com.bach.controller.OrderController;
 import com.bach.controller.RegisterController;
 import com.bach.controller.VoucherManagementController;
 import com.bach.view.VoucherManagementView;
+import com.bach.view.PointsManagementView;
 
 import javax.swing.*;
 
@@ -28,6 +29,10 @@ public class Navigator {
             case VOUCHER:
                 currentFrame.dispose();
                 new VoucherManagementController();
+                break;
+            case POINTS:
+                currentFrame.dispose();
+                new PointsManagementView();
                 break;
             case EXIT:
                 currentFrame.dispose();

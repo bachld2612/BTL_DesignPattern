@@ -82,10 +82,6 @@ public class OrderService {
         return orderDAO.getCustomerIdByOrder(order);
     }
 
-    public void shipOrder(Order order) {
-        order.ship();
-        orderDAO.updateOrderStatus(order.getId(), order.getStatus());
-    }
 
     public void completeOrder(Order order) {
         order.complete();

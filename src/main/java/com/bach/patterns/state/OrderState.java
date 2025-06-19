@@ -6,9 +6,6 @@ public abstract class OrderState {
     public void pay(Order order) {
         throw new IllegalStateException("Không thể thanh toán ở trạng thái hiện tại.");
     }
-    public void ship(Order order) {
-        throw new IllegalStateException("Không thể giao hàng ở trạng thái hiện tại.");
-    }
     public void complete(Order order) {
         throw new IllegalStateException("Không thể hoàn thành ở trạng thái hiện tại.");
     }

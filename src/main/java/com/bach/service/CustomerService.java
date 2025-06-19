@@ -128,4 +128,29 @@ public class CustomerService {
     public List<Customer> getAllCustomers() {
         return customerDAO.getAllCustomers();
     }
+
+    public void resetPoints(int customerId) {
+        String updatePointsSql = "UPDATE customers SET points = 0 WHERE id_customers = ?";
+        String updateLevelSql = "UPDATE customers SET level = ? WHERE id_customers = ?";
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            // Đặt lại điểm
+            stmt = conn.prepareStatement(updatePointsSql);
+            stmt.setInt(1, customerId);
+            stmt.executeUpdate();
+            stmt.close();
+            // Cập nhật level về BRONZE
+            stmt = conn.prepareStatement(updateLevelSql);
+            stmt.setString(1, "BRONZE");
+            stmt.setInt(2, customerId);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.closeQuietly(stmt);
+            ConnectionManager.closeQuietly(conn);
+        }
+    }
 } 

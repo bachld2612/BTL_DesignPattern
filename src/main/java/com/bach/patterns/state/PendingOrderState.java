@@ -9,10 +9,6 @@ public class PendingOrderState extends OrderState {
         order.setStatus("PAID");
     }
 
-    @Override
-    public void ship(Order order) {
-        throw new IllegalStateException("Cannot ship a pending order.");
-    }
 
     @Override
     public void complete(Order order) {

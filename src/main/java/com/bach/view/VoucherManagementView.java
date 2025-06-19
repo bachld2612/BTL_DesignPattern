@@ -60,16 +60,125 @@ public class VoucherManagementView extends JFrame {
     }
 
     private void initializeUI() {
-    
-        
-        // Main panel with BorderLayout
-        JPanel mainPanel = new JPanel(new BorderLayout());
+        // Tiêu đề lớn phía trên
+        JLabel titleLabel = new JLabel("Quản lý voucher", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 28));
+        titleLabel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
+        add(titleLabel, BorderLayout.NORTH);
 
-        // Left panel for voucher management
-        JPanel leftPanel = new JPanel(new BorderLayout());
-        leftPanel.setBorder(BorderFactory.createTitledBorder("Voucher Management"));
+        // Main split pane
+        JSplitPane splitPane = new JSplitPane();
+        splitPane.setDividerLocation(350);
+        splitPane.setResizeWeight(0.0);
+        splitPane.setBorder(null);
 
-        // Voucher table
+        // Form panel (bên trái)
+        JPanel formPanel = new JPanel(new GridBagLayout());
+        formPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder("Thông tin voucher"),
+            BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+        formPanel.setBackground(new Color(245, 250, 255));
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.WEST;
+
+        // Code
+        gbc.gridx = 0; gbc.gridy = 0;
+        JLabel codeLabel = new JLabel("Mã voucher:");
+        codeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(codeLabel, gbc);
+        gbc.gridx = 1;
+        codeField = new JTextField(15);
+        codeField.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(codeField, gbc);
+
+        // Name
+        gbc.gridx = 0; gbc.gridy = 1;
+        JLabel nameLabel = new JLabel("Tên voucher:");
+        nameLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(nameLabel, gbc);
+        gbc.gridx = 1;
+        nameField = new JTextField(15);
+        nameField.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(nameField, gbc);
+
+        // Start Value
+        gbc.gridx = 0; gbc.gridy = 2;
+        JLabel startLabel = new JLabel("Giá trị bắt đầu:");
+        startLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(startLabel, gbc);
+        gbc.gridx = 1;
+        startValueField = new JTextField(15);
+        startValueField.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(startValueField, gbc);
+
+        // End Value
+        gbc.gridx = 0; gbc.gridy = 3;
+        JLabel endLabel = new JLabel("Giá trị kết thúc:");
+        endLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(endLabel, gbc);
+        gbc.gridx = 1;
+        endValueField = new JTextField(15);
+        endValueField.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(endValueField, gbc);
+
+        // Discount Type
+        gbc.gridx = 0; gbc.gridy = 4;
+        JLabel typeLabel = new JLabel("Loại giảm giá:");
+        typeLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(typeLabel, gbc);
+        gbc.gridx = 1;
+        String[] types = {"Phần trăm", "Số tiền cố định"};
+        discountTypeCombo = new JComboBox<>(types);
+        discountTypeCombo.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(discountTypeCombo, gbc);
+
+        // Discount Value
+        gbc.gridx = 0; gbc.gridy = 5;
+        JLabel valueLabel = new JLabel("Giá trị giảm:");
+        valueLabel.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(valueLabel, gbc);
+        gbc.gridx = 1;
+        discountValueField = new JTextField(15);
+        discountValueField.setFont(new Font("Arial", Font.PLAIN, 16));
+        formPanel.add(discountValueField, gbc);
+
+        // Button panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 15, 0));
+        buttonPanel.setOpaque(false);
+        JButton createButton = new JButton("Tạo mới");
+        createButton.setBackground(new Color(76, 175, 80));
+        createButton.setForeground(Color.WHITE);
+        createButton.setFont(new Font("Arial", Font.BOLD, 15));
+        createButton.setFocusPainted(false);
+        createButton.setIcon(UIManager.getIcon("FileChooser.newFolderIcon"));
+        createButton.addActionListener(e -> createVoucher());
+        buttonPanel.add(createButton);
+
+        editButton = new JButton("Sửa");
+        editButton.setBackground(new Color(255, 193, 7));
+        editButton.setForeground(Color.BLACK);
+        editButton.setFont(new Font("Arial", Font.BOLD, 15));
+        editButton.setFocusPainted(false);
+        editButton.setIcon(UIManager.getIcon("FileChooser.detailsViewIcon"));
+        editButton.addActionListener(e -> editVoucher());
+        buttonPanel.add(editButton);
+
+        deleteButton = new JButton("Xóa");
+        deleteButton.setBackground(new Color(244, 67, 54));
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setFont(new Font("Arial", Font.BOLD, 15));
+        deleteButton.setFocusPainted(false);
+        deleteButton.setIcon(UIManager.getIcon("FileChooser.homeFolderIcon"));
+        deleteButton.addActionListener(e -> deleteVoucher());
+        buttonPanel.add(deleteButton);
+
+        gbc.gridx = 0; gbc.gridy = 6; gbc.gridwidth = 2;
+        formPanel.add(buttonPanel, gbc);
+
+        // Bảng voucher (bên phải)
         String[] columnNames = {"Code", "Name", "Start Value", "End Value", "Discount"};
         Object[][] data = vouchers.stream()
             .map(v -> new Object[]{
@@ -81,102 +190,17 @@ public class VoucherManagementView extends JFrame {
             })
             .toArray(Object[][]::new);
         voucherTable = new JTable(data, columnNames);
+        voucherTable.setFont(new Font("Arial", Font.PLAIN, 15));
+        voucherTable.setRowHeight(28);
+        voucherTable.getTableHeader().setFont(new Font("Arial", Font.BOLD, 16));
+        voucherTable.setSelectionBackground(new Color(232, 234, 246));
         JScrollPane tableScrollPane = new JScrollPane(voucherTable);
-        leftPanel.add(tableScrollPane, BorderLayout.CENTER);
+        tableScrollPane.setBorder(BorderFactory.createTitledBorder("Danh sách voucher"));
 
-        // Voucher form
-        JPanel formPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-
-        // Code
-        gbc.gridx = 0; gbc.gridy = 0;
-        formPanel.add(new JLabel("Code:"), gbc);
-        gbc.gridx = 1;
-        codeField = new JTextField(15);
-        formPanel.add(codeField, gbc);
-
-        // Name
-        gbc.gridx = 0; gbc.gridy = 1;
-        formPanel.add(new JLabel("Name:"), gbc);
-        gbc.gridx = 1;
-        nameField = new JTextField(15);
-        formPanel.add(nameField, gbc);
-
-        // Start Value
-        gbc.gridx = 0; gbc.gridy = 2;
-        formPanel.add(new JLabel("Start Value:"), gbc);
-        gbc.gridx = 1;
-        startValueField = new JTextField(15);
-        formPanel.add(startValueField, gbc);
-
-        // End Value
-        gbc.gridx = 0; gbc.gridy = 3;
-        formPanel.add(new JLabel("End Value:"), gbc);
-        gbc.gridx = 1;
-        endValueField = new JTextField(15);
-        formPanel.add(endValueField, gbc);
-
-        // Discount Type
-        gbc.gridx = 0; gbc.gridy = 4;
-        formPanel.add(new JLabel("Discount Type:"), gbc);
-        gbc.gridx = 1;
-        String[] types = {"Percentage", "Fixed Amount"};
-        discountTypeCombo = new JComboBox<>(types);
-        formPanel.add(discountTypeCombo, gbc);
-
-        // Discount Value
-        gbc.gridx = 0; gbc.gridy = 5;
-        formPanel.add(new JLabel("Discount Value:"), gbc);
-        gbc.gridx = 1;
-        discountValueField = new JTextField(15);
-        formPanel.add(discountValueField, gbc);
-
-        // Create button
-        gbc.gridx = 1; gbc.gridy = 6;
-        JButton createButton = new JButton("Create Voucher");
-        createButton.addActionListener(e -> createVoucher());
-        formPanel.add(createButton, gbc);
-
-        // Edit button
-        gbc.gridx = 0; gbc.gridy = 7;
-        editButton = new JButton("Edit Voucher");
-        editButton.addActionListener(e -> editVoucher());
-        formPanel.add(editButton, gbc);
-
-        // Delete button
-        gbc.gridx = 1; gbc.gridy = 7;
-        deleteButton = new JButton("Delete Voucher");
-        deleteButton.addActionListener(e -> deleteVoucher());
-        formPanel.add(deleteButton, gbc);
-
-        leftPanel.add(formPanel, BorderLayout.SOUTH);
-
-        // Right panel for customer levels
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.setBorder(BorderFactory.createTitledBorder("Customer Levels"));
-
-        // Customer table
-        String[] customerColumns = {"Username", "Full Name", "Points", "Level", "Discount"};
-        Object[][] customerData = customers.stream()
-            .map(c -> new Object[]{
-                c.getUsername(),
-                c.getFullName(),
-                c.getPoints(),
-                c.getLevel().getLevelName(),
-                c.getLevel().getDiscountRate() * 100 + "%"
-            })
-            .toArray(Object[][]::new);
-        customerTable = new JTable(customerData, customerColumns);
-        JScrollPane customerScrollPane = new JScrollPane(customerTable);
-        rightPanel.add(customerScrollPane, BorderLayout.CENTER);
-
-        // Add panels to main panel
-        mainPanel.add(leftPanel, BorderLayout.WEST);
-        mainPanel.add(rightPanel, BorderLayout.EAST);
-
-        add(mainPanel, BorderLayout.CENTER);
+        // Đưa panel vào splitPane
+        splitPane.setLeftComponent(formPanel);
+        splitPane.setRightComponent(tableScrollPane);
+        add(splitPane, BorderLayout.CENTER);
 
         // Khi chọn một dòng trên bảng voucher, điền thông tin lên form
         voucherTable.getSelectionModel().addListSelectionListener(e -> fillVoucherFormFromTable());

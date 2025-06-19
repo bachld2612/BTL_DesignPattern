@@ -8,10 +8,6 @@ public class CanceledOrderState extends OrderState {
         throw new IllegalStateException("Order is canceled.");
     }
 
-    @Override
-    public void ship(Order order) {
-        throw new IllegalStateException("Order is canceled.");
-    }
 
     @Override
     public void complete(Order order) {

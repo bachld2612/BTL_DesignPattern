@@ -185,10 +185,11 @@ public class OrderView extends JFrame {
         payButton = new JButton("Thanh toán");
         payButton.addActionListener(e -> handlePayOrder());
         buttonPanel.add(payButton);
-        shipButton = new JButton("Giao hàng");
-        shipButton.addActionListener(e -> handleShipOrder());
-        buttonPanel.add(shipButton);
-        completeButton = new JButton("Hoàn thành");
+        // Ẩn nút Giao hàng
+        // shipButton = new JButton("Giao hàng");
+        // shipButton.addActionListener(e -> handleShipOrder());
+        // buttonPanel.add(shipButton);
+        completeButton = new JButton("Đã nhận được hàng");
         completeButton.addActionListener(e -> handleCompleteOrder());
         buttonPanel.add(completeButton);
         cancelButton = new JButton("Huỷ đơn");
@@ -196,7 +197,7 @@ public class OrderView extends JFrame {
         buttonPanel.add(cancelButton);
         // Ban đầu disable các nút trạng thái
         payButton.setEnabled(false);
-        shipButton.setEnabled(false);
+        // shipButton.setEnabled(false);
         completeButton.setEnabled(false);
         cancelButton.setEnabled(false);
 
@@ -307,21 +308,21 @@ public class OrderView extends JFrame {
             JOptionPane.showMessageDialog(this, "Đã thanh toán đơn hàng!");
         }
     }
-    private void handleShipOrder() {
-        if (currentOrder != null) {
-            orderService.shipOrder(currentOrder);
-            currentOrder = orderService.getLatestOrderForCustomer(customerId);
-            updateOrderStatusUI();
-            JOptionPane.showMessageDialog(this, "Đã giao hàng!");
-        }
-    }
+    // private void handleShipOrder() {
+    //     if (currentOrder != null) {
+    //         orderService.shipOrder(currentOrder);
+    //         currentOrder = orderService.getLatestOrderForCustomer(customerId);
+    //         updateOrderStatusUI();
+    //         JOptionPane.showMessageDialog(this, "Đã giao hàng!");
+    //     }
+    // }
     private void handleCompleteOrder() {
         if (currentOrder != null) {
             orderService.completeOrder(currentOrder);
             currentOrder = orderService.getLatestOrderForCustomer(customerId);
             updateOrderStatusUI();
-            setCustomerId(customerId); // Gọi lại để reload toàn bộ UI liên quan đến giỏ hàng
-            JOptionPane.showMessageDialog(this, "Đơn hàng đã hoàn thành!");
+            setCustomerId(customerId);
+            JOptionPane.showMessageDialog(this, "Bạn đã nhận được hàng!");
         }
     }
     private void handleCancelOrder() {
@@ -338,10 +339,14 @@ public class OrderView extends JFrame {
     }
     private void updateOrderStatusUI() {
         if (currentOrder != null) {
-            orderStatusLabel.setText("Trạng thái: " + currentOrder.getStatus());
+            String status = currentOrder.getStatus();
+            if ("COMPLETED".equalsIgnoreCase(status)) {
+                orderStatusLabel.setText("Trạng thái: Đã nhận được hàng");
+            } else {
+                orderStatusLabel.setText("Trạng thái: " + status);
+            }
             payButton.setEnabled(currentOrder.getState() instanceof com.bach.patterns.state.PendingOrderState);
-            shipButton.setEnabled(currentOrder.getState() instanceof com.bach.patterns.state.PaidOrderState);
-            completeButton.setEnabled(currentOrder.getState() instanceof com.bach.patterns.state.ShippedOrderState);
+            completeButton.setEnabled(currentOrder.getState() instanceof com.bach.patterns.state.PaidOrderState);
             cancelButton.setEnabled(
                 currentOrder.getState() instanceof com.bach.patterns.state.PendingOrderState ||
                 currentOrder.getState() instanceof com.bach.patterns.state.PaidOrderState
@@ -349,7 +354,6 @@ public class OrderView extends JFrame {
         } else {
             orderStatusLabel.setText("Trạng thái: (chưa có đơn hàng)");
             payButton.setEnabled(false);
-            shipButton.setEnabled(false);
             completeButton.setEnabled(false);
             cancelButton.setEnabled(false);
         }

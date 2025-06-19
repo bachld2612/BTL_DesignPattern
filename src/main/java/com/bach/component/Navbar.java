@@ -8,7 +8,7 @@ import java.awt.*;
 public class Navbar extends JPanel {
 
     public Navbar(JFrame currentFrame) {
-        setLayout(new FlowLayout(FlowLayout.LEFT));
+        setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         setBackground(Color.WHITE);
         int width = (currentFrame != null) ? currentFrame.getWidth() : 900;
         setPreferredSize(new Dimension(width, 40));
@@ -18,6 +18,7 @@ public class Navbar extends JPanel {
         add(new DivComponent(NavItem.REGISTER.getTitle(), () -> Navigator.navigate(NavItem.REGISTER, currentFrame)));
         add(new DivComponent(NavItem.ORDER.getTitle(), () -> Navigator.navigate(NavItem.ORDER, currentFrame)));
         add(new DivComponent(NavItem.VOUCHER.getTitle(), () -> Navigator.navigate(NavItem.VOUCHER, currentFrame)));
+        add(new DivComponent(NavItem.POINTS.getTitle(), () -> Navigator.navigate(NavItem.POINTS, currentFrame)));
         add(new DivComponent(NavItem.EXIT.getTitle(), () -> Navigator.navigate(NavItem.EXIT, currentFrame)));
     }
 
@@ -26,6 +27,7 @@ public class Navbar extends JPanel {
         REGISTER("Đăng ký"),
         ORDER("Đặt hàng"),
         VOUCHER("Quản lý voucher"),
+        POINTS("Tích điểm"),
         EXIT("Thoát");
         private final String title;
 
