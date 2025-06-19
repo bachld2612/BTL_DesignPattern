@@ -12,7 +12,7 @@ public class LoginView extends JFrame {
     private JPasswordField passwordField;
     private JButton loginButton;
     private JButton registerButton;
-    private Navbar navbar;
+
 
     public LoginView() {
         setTitle("Login");
@@ -21,12 +21,6 @@ public class LoginView extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         setResizable(false); // Prevent resizing
-        navbar = new Navbar(this);
-        navbar.setVisible(true);
-        navbar.setLocation(0, 0);
-        add(navbar, BorderLayout.NORTH);
-
-
 
         JPanel panel = new JPanel();
         panel.setLayout(null);

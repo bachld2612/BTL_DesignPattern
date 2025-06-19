@@ -14,8 +14,6 @@ public class Navbar extends JPanel {
         setPreferredSize(new Dimension(width, 40));
         setVisible(true);
 
-        add(new DivComponent(NavItem.LOGIN.getTitle(), () -> Navigator.navigate(NavItem.LOGIN, currentFrame)));
-        add(new DivComponent(NavItem.REGISTER.getTitle(), () -> Navigator.navigate(NavItem.REGISTER, currentFrame)));
         add(new DivComponent(NavItem.SUPPLIER.getTitle(), () -> Navigator.navigate(NavItem.SUPPLIER, currentFrame)));
         add(new DivComponent(NavItem.CREATE_SUPPLIER.getTitle(), () -> Navigator.navigate(NavItem.CREATE_SUPPLIER, currentFrame)));
         add(new DivComponent(NavItem.ORDER.getTitle(), () -> Navigator.navigate(NavItem.ORDER, currentFrame)));
@@ -47,10 +45,10 @@ public class Navbar extends JPanel {
         VOUCHER("Quản lý voucher"),
         POINTS("Tích điểm"),
         EXIT("Thoát"),
-        SUPPLIER("Nhà cung cấp"),,
+        SUPPLIER("Nhà cung cấp"),
         INVOICESALE(""),
         INVOICEPURCHASE(""),
-        EVENT("Sự kện")
+        EVENT("Sự kện"),
         CREATE_SUPPLIER("Tạo nhà cung cấp");
         private final String title;
 

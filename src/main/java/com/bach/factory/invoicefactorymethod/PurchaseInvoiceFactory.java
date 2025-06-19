@@ -19,3 +19,5 @@ public class PurchaseInvoiceFactory extends InvoiceFactory {
         return invoice;
     }
 }
+
+

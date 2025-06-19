@@ -25,6 +25,10 @@ public class Customer extends Admin {
         this.level = new BronzeLevel();
     }
 
+    public Customer(int id, String fullName, String phone) {
+        super(id, null, null, fullName, phone);
+    }
+
     public void addPoints(int points) {
         this.points += points;
         updateLevel();

@@ -15,6 +15,7 @@ public class Order {
     private double finalAmount;
     private OrderState state;
 
+    public Order(){};
     public Order(int id, int bookingId, Date orderDate, double totalAmount, 
                 String status, String paymentMethod, String note) {
         this.id = id;

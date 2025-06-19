@@ -13,9 +13,7 @@ public class SalesInvoice implements Invoice {
     private int quantity;
     private String bookingDate;
     private String status;
-
     public SalesInvoice() {}
-
     public SalesInvoice( int orderId, int quantity, String bookingDate, String status) {
         this.orderId = orderId;
         this.quantity = quantity;
