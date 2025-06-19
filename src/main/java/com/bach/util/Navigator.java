@@ -6,6 +6,7 @@ import com.bach.dao.admin.AdminDAO;
 import com.bach.controller.OrderController;
 import com.bach.dao.order.OrderDAO;
 import com.bach.patterns.sessionsingleton.Session;
+import com.bach.view.ProductView;
 import com.bach.view.invoicesales.InvoiceSalesView;
 import com.bach.controller.supplier.CreateSupplierController;
 import com.bach.controller.supplier.SupplierController;
@@ -70,6 +71,11 @@ public class Navigator {
             case CREATE_SUPPLIER:
                 currentFrame.dispose();
                 new CreateSupplierController();
+                break;
+            
+            case PRODUCT:
+                currentFrame.dispose();
+                new ProductView().setVisible(true);
                 break;
             default:
                 throw new IllegalArgumentException("Unknown navigation item: " + navItem);

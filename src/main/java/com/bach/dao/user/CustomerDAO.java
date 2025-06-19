@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class CustomerDAO {
 
     public Customer getCustomerByUsernameAndPassword(String username, String password) {

@@ -1,5 +1,6 @@
 package com.bach;
 
+
 import com.bach.controller.LoginController;
 import com.bach.view.OrderView;
 import com.bach.view.VoucherManagementView;
@@ -12,15 +13,7 @@ public class SwingApplication {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            // Khởi tạo các view
-
-
-            // Hiển thị giao diện đặt hàng
-//             showOrderView();
-//             showVoucherManagementView();
             new LoginController();
         });
-
     }
-
 }
