@@ -2,7 +2,6 @@ package com.bach.patterns.userbuilder;
 
 import com.bach.model.Admin;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class AdminBuilder implements UserBuilder{
@@ -63,6 +62,16 @@ public class AdminBuilder implements UserBuilder{
     @Override
     public void dateOfBirth(Date dateOfBirth) {
         throw new RuntimeException("Admin does not have a date of birth field.");
+    }
+
+    @Override
+    public void points(int points) {
+        throw new RuntimeException("Admin does not have points field.");
+    }
+
+    @Override
+    public void level(String levelName) {
+        throw new RuntimeException("Admin does not have level field.");
     }
 
     public Admin getResult() {

@@ -1,6 +1,10 @@
 package com.bach.view;
 
 import javax.swing.*;
+
+import com.bach.component.Navbar;
+
+import java.awt.BorderLayout;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -14,6 +18,7 @@ public class RegisterView extends JFrame {
     private JSpinner dateOfBirthSpinner;
     private JButton registerButton;
     private JButton loginButton;
+    private Navbar navbar;
 
     public RegisterView(){
         setTitle("Đăng ký");
@@ -21,6 +26,11 @@ public class RegisterView extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(false); // Prevent resizing
+        setLayout(new BorderLayout());
+        navbar = new Navbar(this);
+        navbar.setVisible(true);
+        navbar.setLocation(0, 0);
+        add(navbar, BorderLayout.NORTH);
         JPanel panel = new JPanel();
         panel.setLayout(null);
         JLabel usernameLabel = new JLabel("Tên đăng nhập:");

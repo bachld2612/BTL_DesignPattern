@@ -1,7 +1,6 @@
 package com.bach.controller;
 
 import com.bach.patterns.userbuilder.CustomerBuilder;
-import com.bach.patterns.userbuilder.UserBuilder;
 import com.bach.patterns.userbuilder.UserDirector;
 import com.bach.service.UserService;
 import com.bach.view.RegisterView;
