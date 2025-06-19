@@ -52,4 +52,25 @@ public class AdminDAO {
         return adminMap;
     }
 
+    public String getAdminNameById(int id) {
+        String sql = "SELECT full_name FROM admin WHERE id_admin = ?";
+        String fullName = null;
+
+        try (Connection conn = ConnectionManager.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, id);
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    fullName = rs.getString("full_name");
+                }
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return fullName;
+    }
+
 }

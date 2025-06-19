@@ -16,7 +16,7 @@ public class LoginView extends JFrame {
 
     public LoginView() {
         setTitle("Login");
-        setSize(500, 500);
+        setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());

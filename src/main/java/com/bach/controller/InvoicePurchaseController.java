@@ -3,6 +3,7 @@ package com.bach.controller;
 import com.bach.factory.invoicefactorymethod.Invoice;
 import com.bach.factory.invoicefactorymethod.InvoiceFactory;
 import com.bach.factory.invoicefactorymethod.PurchaseInvoiceFactory;
+import com.bach.patterns.sessionsingleton.Session;
 import com.bach.view.invoicepurchase.InvoicePurchaseView;
 import com.bach.view.invoicepurchase.InvoicePurchaseSearchDialog;
 
@@ -17,14 +18,11 @@ import java.util.Map;
 
 public class InvoicePurchaseController {
     private final InvoicePurchaseView view;
-    private final Map<String, Integer> adminMap;
     private final InvoiceFactory purchaseFactory;
 
-    public InvoicePurchaseController(Map<String, Integer> adminMap) {
-        List<String> adminNames = new ArrayList<>(adminMap.keySet());
-        this.view = new InvoicePurchaseView(adminNames);
+    public InvoicePurchaseController(String adminFullname) {
+        this.view = new InvoicePurchaseView(adminFullname);
         this.purchaseFactory = new PurchaseInvoiceFactory();
-        this.adminMap = adminMap;
         this.view.setVisible(true);
         initController();
     }
@@ -36,8 +34,7 @@ public class InvoicePurchaseController {
 
     private void saveInvoice() {
         try {
-            String selectedAdminName = (String) view.getComboAdminName().getSelectedItem();
-            int adminId = adminMap.getOrDefault(selectedAdminName, -1);
+            int adminId = Session.getInstance().getId();
 //            if (adminId == -1) {
 //                JOptionPane.showMessageDialog(frame, "Không tìm thấy ID của admin được chọn.", "Lỗi", JOptionPane.ERROR_MESSAGE);
 //                return;
@@ -76,7 +73,7 @@ public class InvoicePurchaseController {
                 JOptionPane.showMessageDialog(view, "Invoice created successfully!");
 
                 // Reset form về mặc định
-                view.getComboAdminName().setSelectedIndex(0);
+                view.getTxtAdminName().setText("");
                 view.getTxtAmount().setText("");
                 view.getTxtBuyDate().setText("");
                 view.getComboStatus().setSelectedIndex(0);

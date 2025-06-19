@@ -22,20 +22,20 @@ public class Main {
         eventManager.registerObserver(consoleObserver);
 
         // Thêm khách hàng vào danh sách đăng ký (giả sử đã có khách hàng ID = 1)
-//        Connection conn = null;
-//        PreparedStatement stmt = null;
-//        String subscribeSql = "INSERT INTO customer_event_subscriptions (id_customer) VALUES (?)";
-//        try {
-//            conn = ConnectionManager.getConnection();
-//            stmt = conn.prepareStatement(subscribeSql);
-//            stmt.setInt(1, 6); // id_customer = 1
-//            stmt.executeUpdate();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        } finally {
-//            ConnectionManager.closeQuietly(stmt);
-//            ConnectionManager.closeQuietly(conn);
-//        }
+        Connection conn = null;
+        PreparedStatement stmt = null;
+        String subscribeSql = "INSERT INTO customer_event_subscriptions (id_customer) VALUES (?)";
+        try {
+            conn = ConnectionManager.getConnection();
+            stmt = conn.prepareStatement(subscribeSql);
+            stmt.setInt(1, 6); // id_customer = 1
+            stmt.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionManager.closeQuietly(stmt);
+            ConnectionManager.closeQuietly(conn);
+        }
 
         // Thêm sự kiện mới
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.List;
 
 public class InvoicePurchaseView extends JFrame {
-    private final JComboBox<String> comboAdminName; // id_admin
+    private final JTextField txtAdminName; // id_admin
     private final JTextField txtAmount;             // amount
     private final JTextField txtBuyDate;            // buy_date
     private final JComboBox<String> comboStatus;    // state
@@ -15,7 +15,7 @@ public class InvoicePurchaseView extends JFrame {
     private final JButton btnExport;
     private Navbar navbar;
 
-    public InvoicePurchaseView(List<String> adminFullnames) {
+    public InvoicePurchaseView(String adminFullname) {
         setTitle("Hóa đơn nhập hàng");
         setSize(500, 400);
         setLocationRelativeTo(null);
@@ -35,7 +35,8 @@ public class InvoicePurchaseView extends JFrame {
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 
         JLabel lblAdminId = new JLabel("Admin:");
-        comboAdminName = new JComboBox<>(adminFullnames.toArray(new String[0]));
+        txtAdminName = new JTextField();
+        txtAdminName.setText(adminFullname);
 
         JLabel lblAmount = new JLabel("Amount:");
         txtAmount = new JTextField();
@@ -62,7 +63,7 @@ public class InvoicePurchaseView extends JFrame {
         gbc.gridx = 0; gbc.gridy = y;
         panel.add(lblAdminId, gbc);
         gbc.gridx = 1;
-        panel.add(comboAdminName, gbc);
+        panel.add(txtAdminName, gbc);
 
         gbc.gridx = 0; gbc.gridy = ++y;
         panel.add(lblAmount, gbc);
@@ -95,8 +96,10 @@ public class InvoicePurchaseView extends JFrame {
     }
 
     // Getter cho Controller dùng
-    public JComboBox<String> getComboAdminName() {
-        return comboAdminName;
+
+
+    public JTextField getTxtAdminName() {
+        return txtAdminName;
     }
 
     public JTextField getTxtAmount() {

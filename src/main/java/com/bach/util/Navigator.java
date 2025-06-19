@@ -1,13 +1,11 @@
 package com.bach.util;
 
 import com.bach.component.Navbar;
-import com.bach.controller.InvoicePurchaseController;
-import com.bach.controller.LoginController;
-import com.bach.controller.RegisterController;
+import com.bach.controller.*;
 import com.bach.dao.admin.AdminDAO;
 import com.bach.dao.order.OrderDAO;
+import com.bach.patterns.sessionsingleton.Session;
 import com.bach.view.invoicesales.InvoiceSalesView;
-import com.bach.controller.InvoiceSalesController;
 
 import javax.swing.*;
 import java.util.List;
@@ -34,8 +32,12 @@ public class Navigator {
             case INVOICEPURCHASE:
                 currentFrame.dispose();
                 AdminDAO adminDAO = new AdminDAO();
-                Map<String, Integer> adminMap = adminDAO.getAllAdminMap();
-                new InvoicePurchaseController(adminMap);
+                String adminFullname = adminDAO.getAdminNameById(Session.getInstance().getId());
+                new InvoicePurchaseController(adminFullname);
+                break;
+            case EVENT:
+                currentFrame.dispose();
+                new EventController();
                 break;
             case EXIT:
                 currentFrame.dispose();

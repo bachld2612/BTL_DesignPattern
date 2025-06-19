@@ -14,7 +14,7 @@ public class Navbar extends JPanel {
         setVisible(true);
         add(new DivComponent(NavItem.LOGIN.getTitle(), () -> Navigator.navigate(NavItem.LOGIN, currentFrame)));
         add(new DivComponent(NavItem.REGISTER.getTitle(), () -> Navigator.navigate(NavItem.REGISTER, currentFrame)));
-
+        add(new DivComponent(NavItem.EVENT.getTitle(), () -> Navigator.navigate(NavItem.EVENT, currentFrame)));
         JButton invoiceButton = new JButton("Hóa Đơn");
 
         JPopupMenu invoiceMenu = new JPopupMenu();
@@ -37,7 +37,8 @@ public class Navbar extends JPanel {
         REGISTER("Đăng ký"),
         EXIT("Thoát"),
         INVOICESALE(""),
-        INVOICEPURCHASE("")
+        INVOICEPURCHASE(""),
+        EVENT("Sự kện")
         ;
         private final String title;
 
