@@ -14,17 +14,16 @@ public class LoginView extends JFrame {
     private JButton registerButton;
     private Navbar navbar;
 
+
+
     public LoginView() {
         setTitle("Login");
-        setSize(300, 300);
+        setSize(500, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
         setResizable(false); // Prevent resizing
-        navbar = new Navbar(this);
-        navbar.setVisible(true);
-        navbar.setLocation(0, 0);
-        add(navbar, BorderLayout.NORTH);
+
 
 
 
@@ -33,7 +32,9 @@ public class LoginView extends JFrame {
         // Set panel bounds below the navbar (assuming navbar height is 50)
         panel.setBounds(0, 50, 500, 450);
 
+
         JLabel usernameLabel = new JLabel("Tên đăng nhập:");
+
         usernameLabel.setBounds(10, 20, 80, 25);
         panel.add(usernameLabel);
 
@@ -49,11 +50,13 @@ public class LoginView extends JFrame {
         passwordField.setBounds(100, 50, 165, 25);
         panel.add(passwordField);
 
+
         loginButton = new JButton("Đăng nhập");
         loginButton.setBounds(10, 80, 125, 25); // Set same width
         panel.add(loginButton);
 
         registerButton = new JButton("Đăng ký");
+
         registerButton.setBounds(140, 80, 125, 25); // Set same width
         panel.add(registerButton);
 

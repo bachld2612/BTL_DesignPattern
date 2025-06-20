@@ -4,6 +4,7 @@ import com.bach.controller.supplier.CreateSupplierController;
 import com.bach.patterns.sessionsingleton.Session;
 import com.bach.service.UserService;
 import com.bach.view.LoginView;
+import com.bach.view.AdminDiscountView;
 
 public class LoginController {
 
@@ -22,20 +23,39 @@ public class LoginController {
         loginView.addRegisterListener(e -> backToRegister());
     }
 
-    public void login(){
-        String username = loginView.getUsername();
-        String password = loginView.getPassword();
-        try{
+    public void login() {
+        String username = loginView.getUsername().trim();
+        String password = loginView.getPassword().trim();
+
+        // E-1: Chưa nhập username
+        if (username.isEmpty()) {
+            loginView.showError("Vui lòng nhập tài khoản");
+            return;
+        }
+
+        // E-2: Chưa nhập password
+        if (password.isEmpty()) {
+            loginView.showError("Vui lòng nhập mật khẩu");
+            return;
+        }
+
+        try {
+            // Thử đăng nhập (có thể ném RuntimeException nếu sai)
             userService.login(username, password);
             loginView.showMessage("Login successful with role: " + Session.getInstance().getRole() + " id: " + Session.getInstance().getId());
-            if(Session.getInstance().getRole().equals("admin")) {
+            if (Session.getInstance().getRole().equals("admin")) {
+                new OrderController();
                 loginView.dispose();
-                new CreateSupplierController();
+            }
+            else{
+                new CustomerMainController();
+                loginView.dispose();
             }
         }catch (RuntimeException e) {
             loginView.showError(e.getMessage());
         }
     }
+
 
     public void backToRegister(){
         loginView.dispose();

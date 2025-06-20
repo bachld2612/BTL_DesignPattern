@@ -16,7 +16,7 @@ public class RegisterView extends JFrame {
     private JButton loginButton;
 
     public RegisterView(){
-        setTitle("Đăng ký");
+        setTitle("Register");
         setSize(400, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -35,7 +35,7 @@ public class RegisterView extends JFrame {
         passwordField = new JPasswordField(20);
         passwordField.setBounds(100, 50, 165, 25);
         panel.add(passwordField);
-        JLabel fullNameLabel = new JLabel("Họ và tên:");
+        JLabel fullNameLabel = new JLabel("Tên đầy đủ:");
         fullNameLabel.setBounds(10, 80, 80, 25);
         panel.add(fullNameLabel);
         fullNameField = new JTextField(20);
@@ -61,7 +61,7 @@ public class RegisterView extends JFrame {
         dateOfBirthSpinner.setEditor(dateEditor);
         dateOfBirthSpinner.setBounds(100, 170, 165, 25);
         panel.add(dateOfBirthSpinner);
-        registerButton = new JButton("Đăng ký");
+        registerButton = new JButton("Đăng kí");
         registerButton.setBounds(10, 200, 125, 25); // Set same width
         panel.add(registerButton);
         loginButton = new JButton("Đăng nhập");
@@ -109,5 +109,54 @@ public class RegisterView extends JFrame {
     public void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Error", JOptionPane.ERROR_MESSAGE);
     }
+
+    public boolean isValidInput() {
+        String username = getUsername().trim();
+        String password = getPassword().trim();
+        String fullName = getFullName().trim();
+        String phone = getPhone().trim();
+        String address = getAddress().trim();
+
+        if (username.isEmpty() || password.isEmpty() || fullName.isEmpty()
+                || phone.isEmpty() || address.isEmpty()) {
+            showError("Vui lòng điền đầy đủ thông tin!");
+            return false;
+        }
+
+        if (username.length() < 4 || username.contains(" ")) {
+            showError("Tên đăng nhập phải có ít nhất 4 ký tự và không chứa khoảng trắng!");
+            return false;
+        }
+
+        if (!fullName.matches("^[\\p{L}\\s]+$")) {
+            showError("Họ tên chỉ được chứa chữ cái và khoảng trắng!");
+            return false;
+        }
+
+        if (password.length() < 6 || !password.matches(".*[A-Za-z].*") || !password.matches(".*\\d.*")) {
+            showError("Mật khẩu phải có ít nhất 6 ký tự, bao gồm cả chữ và số!");
+            return false;
+        }
+
+        if (!phone.matches("^0\\d{9}$")) {
+            showError("Số điện thoại không hợp lệ! (Phải có 10 chữ số và bắt đầu bằng số 0)");
+            return false;
+        }
+
+        if (address.length() < 5) {
+            showError("Địa chỉ quá ngắn!");
+            return false;
+        }
+
+        Date today = new Date();
+        if (getDateOfBirth().after(today)) {
+            showError("Ngày sinh không hợp lệ!");
+            return false;
+        }
+
+        return true;
+    }
+
+
 
 }

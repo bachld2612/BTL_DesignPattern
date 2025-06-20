@@ -9,6 +9,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class CustomerDAO {
 
@@ -96,6 +99,33 @@ public class CustomerDAO {
             ConnectionManager.closeQuietly(conn);
         }
 
+    }
+
+
+    public List<Customer> getAllCustomers() {
+        List<Customer> customers = new ArrayList<>();
+        String sql = "SELECT * FROM customers";
+        Connection conn = null;
+        PreparedStatement statement = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionManager.getConnection();
+            statement = conn.prepareStatement(sql);
+            rs = statement.executeQuery();
+            UserDirector director = new UserDirector();
+            while (rs.next()) {
+                CustomerBuilder builder = new CustomerBuilder();
+                director.createCustomerFromResultSet(builder, rs);
+                customers.add(builder.getResult());
+            }
+        } catch (SQLException e) {
+            System.out.println("Error while getting all customers: " + e.getMessage());
+        } finally {
+            ConnectionManager.closeQuietly(rs);
+            ConnectionManager.closeQuietly(statement);
+            ConnectionManager.closeQuietly(conn);
+        }
+        return customers;
     }
 
 }
