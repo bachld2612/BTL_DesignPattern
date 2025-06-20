@@ -1,6 +1,8 @@
 package com.bach.model;
 
 import com.bach.patterns.sessionsingleton.Session;
+import com.bach.patterns.supplierstate.InActiveSupplierState;
+import com.bach.patterns.supplierstate.SupplierState;
 
 public class Supplier {
 
@@ -10,9 +12,11 @@ public class Supplier {
     private String address;
     private String email;
     private int adminId;
+    private SupplierState state;
 
     public Supplier() {
         this.setAdminId(Session.getInstance().getId());
+        this.state = new InActiveSupplierState(this);
     }
 
     public Supplier(int id, String name, String phone, String address, String email, int adminId) {
@@ -22,7 +26,25 @@ public class Supplier {
         this.address = address;
         this.email = email;
         this.adminId = adminId;
+        this.state = new InActiveSupplierState(this);
     }
+
+    public String getState() {
+        if (state instanceof InActiveSupplierState) {
+            return "inactive";
+        } else {
+            return "active";
+        }
+    }
+
+    public void changeState(SupplierState state) {
+        this.state = state;
+    }
+
+    public boolean canEdit() {
+        return state.canEdit();
+    }
+    
 
     public int getId() {
         return id;

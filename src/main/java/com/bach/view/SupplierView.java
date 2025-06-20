@@ -2,6 +2,8 @@ package com.bach.view;
 
 import com.bach.component.Navbar;
 import com.bach.model.Supplier;
+import com.bach.patterns.supplierstate.ActiveSupplierState;
+import com.bach.patterns.supplierstate.InActiveSupplierState;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -15,11 +17,14 @@ public class SupplierView extends JFrame {
     private JTextField phoneField;
     private JTextField addressField;
     private JTextField emailField;
+    private JTextField stateField;
     private JButton editButton;
     private JButton deleteButton;
     private JTable supplierTable;
     private DefaultTableModel tableModel;
     private Navbar navbar;
+    private JButton activateButton;
+    private JButton addSupplierButton;
 
     public SupplierView() {
         setTitle("Quản lý nhà cung cấp");
@@ -40,8 +45,10 @@ public class SupplierView extends JFrame {
         phoneField = new JTextField();
         addressField = new JTextField();
         emailField = new JTextField();
+        stateField = new JTextField();
 
         idField.setEditable(false);
+        stateField.setEditable(false);
 
         formPanel.add(createFormRow("ID:", idField));
         formPanel.add(Box.createVerticalStrut(8));
@@ -52,20 +59,29 @@ public class SupplierView extends JFrame {
         formPanel.add(createFormRow("Địa chỉ:", addressField));
         formPanel.add(Box.createVerticalStrut(8));
         formPanel.add(createFormRow("Email:", emailField));
+        formPanel.add(Box.createVerticalStrut(8));
+        formPanel.add(createFormRow("Trạng thái:", stateField));
         formPanel.add(Box.createVerticalStrut(12));
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 2));
         editButton = new JButton("Sửa");
         deleteButton = new JButton("Xoá");
+        activateButton = new JButton("Kích hoạt");
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);
+        buttonPanel.add(activateButton);
         formPanel.add(buttonPanel);
+        // Thêm nút Thêm nhà cung cấp ở dưới cùng
+        JPanel addButtonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        addSupplierButton = new JButton("Thêm nhà cung cấp");
+        addButtonPanel.add(addSupplierButton);
+        formPanel.add(addButtonPanel);
 
         JPanel formWrapper = new JPanel(new BorderLayout());
         formWrapper.add(formPanel, BorderLayout.CENTER);
         formWrapper.setBorder(BorderFactory.createEmptyBorder(16, 32, 8, 32));
 
-        String[] columns = {"ID", "Tên", "SĐT", "Địa chỉ", "Email"};
+        String[] columns = {"ID", "Tên", "SĐT", "Địa chỉ", "Email", "Trạng thái"};
         tableModel = new DefaultTableModel(columns, 0) {
             public boolean isCellEditable(int row, int col) {
                 return false;
@@ -94,6 +110,13 @@ public class SupplierView extends JFrame {
                     phoneField.setText(tableModel.getValueAt(row, 2).toString());
                     addressField.setText(tableModel.getValueAt(row, 3).toString());
                     emailField.setText(tableModel.getValueAt(row, 4).toString());
+                    stateField.setText(tableModel.getValueAt(row, 5).toString());
+                    // Update activateButton label
+                    if (stateField.getText().equals("inactive")) {
+                        activateButton.setText("Kích hoạt");
+                    } else {
+                        activateButton.setText("Hủy kích hoạt");
+                    }
                 }
             }
         });
@@ -124,7 +147,7 @@ public class SupplierView extends JFrame {
         tableModel.setRowCount(0);
         for (Supplier s : supplierList) {
             tableModel.addRow(new Object[]{
-                    s.getId(), s.getName(), s.getPhone(), s.getAddress(), s.getEmail()
+                    s.getId(), s.getName(), s.getPhone(), s.getAddress(), s.getEmail(), s.getState()
             });
         }
     }
@@ -137,6 +160,13 @@ public class SupplierView extends JFrame {
         supplier.setPhone(phoneField.getText());
         supplier.setAddress(addressField.getText());
         supplier.setEmail(emailField.getText());
+        if(stateField.getText().equals("inactive")) {
+            supplier.changeState(new InActiveSupplierState(supplier));
+            activateButton.setText("Kích hoạt");
+        } else {
+            supplier.changeState(new ActiveSupplierState(supplier));
+            activateButton.setText("Hủy kích hoạt");
+        }
         return supplier;
 
     }
@@ -146,7 +176,19 @@ public class SupplierView extends JFrame {
     }
 
     public void setDeleteButtonListener(ActionListener listener) {
+
         deleteButton.addActionListener(listener);
+    }
+    public void setActivateButtonListener(ActionListener listener) {
+        activateButton.addActionListener(listener);
+    }
+    // Thêm phương thức để set listener cho nút Thêm nhà cung cấp
+    public void setAddSupplierButtonListener(ActionListener listener) {
+        addSupplierButton.addActionListener(listener);
+    }
+
+    public JButton getActivateButton() {
+        return activateButton;
     }
 
     public void refreshTable(List<Supplier> suppliers) {
@@ -157,6 +199,7 @@ public class SupplierView extends JFrame {
         phoneField.setText("");
         addressField.setText("");
         emailField.setText("");
+        stateField.setText("");
     }
     public void showError(String message) {
         JOptionPane.showMessageDialog(this, message, "Lỗi", JOptionPane.ERROR_MESSAGE);
@@ -164,5 +207,22 @@ public class SupplierView extends JFrame {
 
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void showConfirmDeleteDialog(String message, ActionListener confirmListener) {
+        String[] options = {"Xác nhận", "Huỷ"};
+        int response = JOptionPane.showOptionDialog(
+                this,
+                message,
+                "Xác nhận xoá",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+        if (response == 0) {
+            confirmListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+        }
     }
 }

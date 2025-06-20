@@ -1,6 +1,8 @@
 package com.bach.dao;
 
 import com.bach.model.Supplier;
+import com.bach.patterns.supplierstate.ActiveSupplierState;
+import com.bach.patterns.supplierstate.InActiveSupplierState;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -33,7 +35,7 @@ public class SupplierDAO {
 
     public void updateSupplier(Supplier supplier) {
 
-        String query = "UPDATE suppliers SET name = ?, phone = ?, address = ?, email = ? WHERE id_suppliers = ?";
+        String query = "UPDATE suppliers SET name = ?, phone = ?, address = ?, email = ?, state = ? WHERE id_suppliers = ?";
         Connection conn = null;
         PreparedStatement statement = null;
         try {
@@ -43,7 +45,8 @@ public class SupplierDAO {
             statement.setNString(2, supplier.getPhone());
             statement.setNString(3, supplier.getAddress());
             statement.setNString(4, supplier.getEmail());
-            statement.setInt(5, supplier.getId());
+            statement.setString(5, supplier.getState());
+            statement.setInt(6, supplier.getId());
             statement.executeUpdate();
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -53,6 +56,7 @@ public class SupplierDAO {
         }
 
     }
+
 
     public void deleteSupplier(int id) {
 
@@ -91,6 +95,11 @@ public class SupplierDAO {
                 supplier.setAddress(resultSet.getNString("address"));
                 supplier.setEmail(resultSet.getNString("email"));
                 supplier.setAdminId(resultSet.getInt("id_admin"));
+                if (resultSet.getString("state").equalsIgnoreCase("active")) {
+                    supplier.changeState(new ActiveSupplierState(supplier));
+                } else {
+                    supplier.changeState(new InActiveSupplierState(supplier));
+                }
                 suppliers.add(supplier);
             }
             return suppliers;
