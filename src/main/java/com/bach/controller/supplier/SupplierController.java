@@ -40,6 +40,7 @@ public class SupplierController {
                 return;
             }
             supplierService.updateSupplier(supplier);
+            supplierView.showMessage("Sửa nhà cung cấp thành công");
             supplierView.refreshTable(supplierService.getAllSuppliers());
         } else {
             supplierView.showError("Vui lòng chọn nhà cung cấp để sửa.");
@@ -50,8 +51,13 @@ public class SupplierController {
     public void deleteSupplier() {
         Supplier supplier = supplierView.getSelectedSupplierFromForm();
         if (supplier != null) {
-            supplierService.deleteSupplier(supplier.getId());
-            supplierView.refreshTable(supplierService.getAllSuppliers());
+            supplierView.showConfirmDeleteDialog("Bạn có chắc chắn muốn xoá nhà cung cấp này không?",
+                    e -> {
+                        supplierService.deleteSupplier(supplier.getId());
+                        supplierView.refreshTable(supplierService.getAllSuppliers());
+                        supplierView.showMessage("Xoá nhà cung cấp thành công");
+                    });
+
         } else {
             supplierView.showError("Vui lòng chọn nhà cung cấp để xoá.");
         }
@@ -66,6 +72,7 @@ public class SupplierController {
                 supplier.changeState(new ActiveSupplierState(supplier));
             }
             supplierService.updateSupplier(supplier);
+            supplierView.showMessage("Đã " + (supplier.getState().equals("active") ? "kích hoạt" : "huỷ kích hoạt") + " nhà cung cấp thành công");
             supplierView.refreshTable(supplierService.getAllSuppliers());
         } else {
             supplierView.showError("Vui lòng chọn nhà cung cấp để kích hoạt hoặc vô hiệu hoá.");

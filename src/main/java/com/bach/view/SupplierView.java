@@ -176,6 +176,7 @@ public class SupplierView extends JFrame {
     }
 
     public void setDeleteButtonListener(ActionListener listener) {
+
         deleteButton.addActionListener(listener);
     }
     public void setActivateButtonListener(ActionListener listener) {
@@ -206,5 +207,22 @@ public class SupplierView extends JFrame {
 
     public void showMessage(String message) {
         JOptionPane.showMessageDialog(this, message, "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void showConfirmDeleteDialog(String message, ActionListener confirmListener) {
+        String[] options = {"Xác nhận", "Huỷ"};
+        int response = JOptionPane.showOptionDialog(
+                this,
+                message,
+                "Xác nhận xoá",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null,
+                options,
+                options[0]
+        );
+        if (response == 0) {
+            confirmListener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, null));
+        }
     }
 }

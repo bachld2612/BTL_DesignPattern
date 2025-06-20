@@ -1,6 +1,7 @@
 package com.bach.controller;
 
 import com.bach.controller.supplier.CreateSupplierController;
+import com.bach.controller.supplier.SupplierController;
 import com.bach.patterns.sessionsingleton.Session;
 import com.bach.service.UserService;
 import com.bach.view.LoginView;
@@ -44,7 +45,7 @@ public class LoginController {
             userService.login(username, password);
             loginView.showMessage("Login successful with role: " + Session.getInstance().getRole() + " id: " + Session.getInstance().getId());
             if (Session.getInstance().getRole().equals("admin")) {
-                new OrderController();
+                new SupplierController();
                 loginView.dispose();
             }
             else{

@@ -19,8 +19,8 @@ public class CreateSupplierView extends JFrame {
     public CreateSupplierView() {
         setTitle("Tạo nhà cung cấp");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setMinimumSize(new Dimension(500, 260)); // Lower height
-        setPreferredSize(new Dimension(600, 320)); // Lower height
+        setMinimumSize(new Dimension(500, 380)); // Lower height
+        setPreferredSize(new Dimension(600, 380)); // Lower height
         setLocationRelativeTo(null); // Center on screen
         setLayout(new BorderLayout(10, 10));
 
