@@ -54,6 +54,7 @@ public class CreateSupplierView extends JFrame {
         formPanel.add(createFormRow("Địa chỉ:", addressField = new JTextField()));
         formPanel.add(Box.createVerticalStrut(10));
         formPanel.add(createFormRow("Email:", emailField = new JTextField()));
+        formPanel.add(Box.createVerticalStrut(10));
 
         add(formPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH); // Place below formPanel
