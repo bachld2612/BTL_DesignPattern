@@ -22,19 +22,6 @@ public class PercentageVoucher implements IVoucher {
     }
 
     @Override
-    public int getId() { return id; }
-    @Override
-    public String getCode() { return code; }
-    @Override
-    public String getName() { return name; }
-    @Override
-    public double getStartValue() { return startValue; }
-    @Override
-    public double getEndValue() { return endValue; }
-    @Override
-    public boolean isActive() { return isActive; }
-
-    @Override
     public double calculateDiscount(double originalPrice) {
         if (!isActive || originalPrice < startValue || originalPrice > endValue) {
             return 0;
@@ -48,4 +35,19 @@ public class PercentageVoucher implements IVoucher {
     public String getDiscountDescription() {
         return String.format("%.0f%% off", percentage);
     }
+
+
+    @Override
+    public int getId() { return id; }
+    @Override
+    public String getCode() { return code; }
+    @Override
+    public String getName() { return name; }
+    @Override
+    public double getStartValue() { return startValue; }
+    @Override
+    public double getEndValue() { return endValue; }
+    @Override
+    public boolean isActive() { return isActive; }
+
 } 

@@ -20,4 +20,5 @@ public class PaidOrderState extends OrderState {
     public String getStateName() {
         return "PAID";
     }
-} 
+}
+

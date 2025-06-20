@@ -6,3 +6,4 @@ public interface DiscountStrategy {
     String getType();
     double getValue();
 }
+

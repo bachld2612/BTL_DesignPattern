@@ -215,14 +215,15 @@ public class VoucherManagementView extends JFrame {
             String discountType = (String) discountTypeCombo.getSelectedItem();
             double discountValue = Double.parseDouble(discountValueField.getText().trim());
 
-            IVoucher voucher;
-            if ("Percentage".equals(discountType)) {
-                voucher = new PercentageVoucherFactory().createVoucher(
-                    vouchers.size() + 1, code, name, startValue, endValue, discountValue);
+            VoucherFactory factory;
+            if ("Phần trăm".equals(discountType)) {
+                factory = new PercentageVoucherFactory();
             } else {
-                voucher = new FixedAmountVoucherFactory().createVoucher(
-                    vouchers.size() + 1, code, name, startValue, endValue, discountValue);
+                factory = new FixedAmountVoucherFactory();
             }
+
+            IVoucher voucher = factory.createVoucher(
+                vouchers.size() + 1, code, name, startValue, endValue, discountValue);
 
             // Save voucher to database
             voucherService.saveVoucher(voucher);
@@ -272,9 +273,9 @@ public class VoucherManagementView extends JFrame {
             endValueField.setText(String.valueOf(v.getEndValue()));
             discountValueField.setText(String.valueOf(v.getDiscountDescription().contains("%") ? ((com.bach.model.PercentageVoucher)v).getPercentage() : ((com.bach.model.FixedAmountVoucher)v).getAmount()));
             if (v.getDiscountDescription().contains("%")) {
-                discountTypeCombo.setSelectedItem("Percentage");
+                discountTypeCombo.setSelectedItem("Phần trăm");
             } else {
-                discountTypeCombo.setSelectedItem("Fixed Amount");
+                discountTypeCombo.setSelectedItem("Số tiền cố định");
             }
         }
     }
@@ -293,14 +294,17 @@ public class VoucherManagementView extends JFrame {
             double endValue = Double.parseDouble(endValueField.getText().trim());
             String discountType = (String) discountTypeCombo.getSelectedItem();
             double discountValue = Double.parseDouble(discountValueField.getText().trim());
-            IVoucher newVoucher;
-            if ("Percentage".equals(discountType)) {
-                newVoucher = new PercentageVoucherFactory().createVoucher(
-                    oldVoucher.getId(), code, name, startValue, endValue, discountValue);
+
+            VoucherFactory factory;
+            if ("Phần trăm".equals(discountType)) {
+                factory = new PercentageVoucherFactory();
             } else {
-                newVoucher = new FixedAmountVoucherFactory().createVoucher(
-                    oldVoucher.getId(), code, name, startValue, endValue, discountValue);
+                factory = new FixedAmountVoucherFactory();
             }
+            
+            IVoucher newVoucher = factory.createVoucher(
+                    oldVoucher.getId(), code, name, startValue, endValue, discountValue);
+
             voucherService.updateVoucher(newVoucher);
             vouchers = voucherService.getAllVouchers();
             refreshVoucherTable();

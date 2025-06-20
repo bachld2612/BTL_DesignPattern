@@ -26,4 +26,5 @@ public class FixedAmountDiscountStrategy implements DiscountStrategy {
     public double getValue() {
         return amount;
     }
-} 
+}
+

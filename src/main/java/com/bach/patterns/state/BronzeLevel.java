@@ -20,4 +20,5 @@ public class BronzeLevel extends MemberLevel {
     public String getDescription() {
         return "Basic member level with 5% discount";
     }
-} 
+}
+

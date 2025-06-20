@@ -26,4 +26,6 @@ public class PercentageDiscountStrategy implements DiscountStrategy {
     public double getValue() {
         return percentage;
     }
-} 
+}
+
+
