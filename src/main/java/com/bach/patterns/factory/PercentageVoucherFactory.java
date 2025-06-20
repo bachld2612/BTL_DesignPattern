@@ -8,4 +8,6 @@ public class PercentageVoucherFactory implements VoucherFactory {
     public IVoucher createVoucher(int id, String code, String name, double startValue, double endValue, double value) {
         return new PercentageVoucher(id, code, name, startValue, endValue, true, value);
     }
-} 
+}
+
+

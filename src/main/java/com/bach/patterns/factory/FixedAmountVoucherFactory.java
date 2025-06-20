@@ -8,4 +8,6 @@ public class FixedAmountVoucherFactory implements VoucherFactory {
     public IVoucher createVoucher(int id, String code, String name, double startValue, double endValue, double value) {
         return new FixedAmountVoucher(id, code, name, startValue, endValue, true, value);
     }
-} 
+}
+
+

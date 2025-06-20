@@ -9,7 +9,6 @@ public class PendingOrderState extends OrderState {
         order.setStatus("PAID");
     }
 
-
     @Override
     public void complete(Order order) {
         throw new IllegalStateException("Cannot complete a pending order.");

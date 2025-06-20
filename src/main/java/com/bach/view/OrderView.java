@@ -254,7 +254,7 @@ public class OrderView extends JFrame {
         for (IVoucher voucher : vouchers) {
             voucherComboBox.addItem(voucher.getName() + " (" + voucher.getCode() + ")");
         }
-        updateFinalAmount();
+        updateFinalAmount();    
     }
 
     private void loadMemberInfo() {

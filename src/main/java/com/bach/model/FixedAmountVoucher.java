@@ -22,19 +22,6 @@ public class FixedAmountVoucher implements IVoucher {
     }
 
     @Override
-    public int getId() { return id; }
-    @Override
-    public String getCode() { return code; }
-    @Override
-    public String getName() { return name; }
-    @Override
-    public double getStartValue() { return startValue; }
-    @Override
-    public double getEndValue() { return endValue; }
-    @Override
-    public boolean isActive() { return isActive; }
-
-    @Override
     public double calculateDiscount(double originalPrice) {
         if (!isActive || originalPrice < startValue || originalPrice > endValue) {
             return 0;
@@ -48,4 +35,17 @@ public class FixedAmountVoucher implements IVoucher {
     public String getDiscountDescription() {
         return String.format("-%,.0f VND", amount);
     }
+
+    @Override
+    public int getId() { return id; }
+    @Override
+    public String getCode() { return code; }
+    @Override
+    public String getName() { return name; }
+    @Override
+    public double getStartValue() { return startValue; }
+    @Override
+    public double getEndValue() { return endValue; }
+    @Override
+    public boolean isActive() { return isActive; }
 } 

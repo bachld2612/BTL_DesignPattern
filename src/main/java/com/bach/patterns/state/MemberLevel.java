@@ -7,4 +7,6 @@ public abstract class MemberLevel {
     public String getDescription() {
         return getLevelName() + " (" + (int)(getDiscountRate()*100) + "% giảm giá, từ " + getRequiredPoints() + " điểm)";
     }
-} 
+}
+
+
