@@ -25,13 +25,15 @@ public class CreateSupplierController {
         if (createSupplierView.getName().isEmpty() ||
             createSupplierView.getAddressValue().isEmpty() ||
             createSupplierView.getPhoneValue().isEmpty()) {
-            createSupplierView.showError("All fields are required");
+            createSupplierView.showError("Không được để trống thông tin nhà cung cấp");
             return;
         }
 
         try {
             supplierService.creatSupplier(createSupplierView.getSupplier());
-            createSupplierView.showMessage("Supplier created successfully");
+            createSupplierView.showMessage("Tạo nhà cung cấp thành công");
+            createSupplierView.dispose();
+            new SupplierController();
         } catch (RuntimeException e) {
             createSupplierView.showError(e.getMessage());
         }
