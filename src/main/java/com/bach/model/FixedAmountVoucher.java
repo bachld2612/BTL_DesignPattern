@@ -1,6 +1,7 @@
 package com.bach.model;
 
 import com.bach.patterns.strategy.FixedAmountDiscountStrategy;
+import com.bach.patterns.strategy.DiscountContext;
 
 public class FixedAmountVoucher implements IVoucher {
     private int id;
@@ -10,6 +11,7 @@ public class FixedAmountVoucher implements IVoucher {
     private double endValue;
     private boolean isActive;
     private double amount;
+    private DiscountContext discountContext;
 
     public FixedAmountVoucher(int id, String code, String name, double startValue, double endValue, boolean isActive, double amount) {
         this.id = id;
@@ -19,6 +21,8 @@ public class FixedAmountVoucher implements IVoucher {
         this.endValue = endValue;
         this.isActive = isActive;
         this.amount = amount;
+        this.discountContext = new DiscountContext();
+        this.discountContext.setStrategy(new FixedAmountDiscountStrategy(amount));
     }
 
     @Override
@@ -26,7 +30,7 @@ public class FixedAmountVoucher implements IVoucher {
         if (!isActive || originalPrice < startValue || originalPrice > endValue) {
             return 0;
         }
-        return new FixedAmountDiscountStrategy(amount).calculateDiscount(originalPrice);
+        return discountContext.calculateDiscount(originalPrice);
     }
 
     public double getAmount() { return amount; }
