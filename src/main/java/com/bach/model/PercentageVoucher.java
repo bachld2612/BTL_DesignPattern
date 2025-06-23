@@ -1,6 +1,7 @@
 package com.bach.model;
 
 import com.bach.patterns.strategy.PercentageDiscountStrategy;
+import com.bach.patterns.strategy.DiscountContext;
 
 public class PercentageVoucher implements IVoucher {
     private int id;
@@ -10,6 +11,7 @@ public class PercentageVoucher implements IVoucher {
     private double endValue;
     private boolean isActive;
     private double percentage;
+    private DiscountContext discountContext;
 
     public PercentageVoucher(int id, String code, String name, double startValue, double endValue, boolean isActive, double percentage) {
         this.id = id;
@@ -19,6 +21,8 @@ public class PercentageVoucher implements IVoucher {
         this.endValue = endValue;
         this.isActive = isActive;
         this.percentage = percentage;
+        this.discountContext = new DiscountContext();
+        this.discountContext.setStrategy(new PercentageDiscountStrategy(percentage));
     }
 
     @Override
@@ -26,7 +30,7 @@ public class PercentageVoucher implements IVoucher {
         if (!isActive || originalPrice < startValue || originalPrice > endValue) {
             return 0;
         }
-        return new PercentageDiscountStrategy(percentage).calculateDiscount(originalPrice);
+        return discountContext.calculateDiscount(originalPrice);
     }
 
     public double getPercentage() { return percentage; }

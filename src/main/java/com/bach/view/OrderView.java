@@ -8,6 +8,9 @@ import com.bach.service.OrderService;
 import com.bach.service.CustomerService;
 import com.bach.component.Navbar;
 import com.bach.model.Order;
+import com.bach.patterns.strategy.DiscountContext;
+import com.bach.patterns.strategy.FixedAmountDiscountStrategy;
+import com.bach.patterns.strategy.PercentageDiscountStrategy;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -19,6 +22,7 @@ public class OrderView extends JFrame {
     private final CartService cartService;
     private final OrderService orderService;
     private final CustomerService customerService;
+    private final DiscountContext discountContext;
     private final JTable cartTable;
     private final JComboBox<String> voucherComboBox;
     private final JTextField totalAmountField;
@@ -47,12 +51,10 @@ public class OrderView extends JFrame {
     }
 
     public OrderView() {
-
-
-
-        this.cartService = CartService.getInstance();
-        this.orderService = OrderService.getInstance();
-        this.customerService = CustomerService.getInstance();
+        cartService = CartService.getInstance();
+        orderService = OrderService.getInstance();
+        customerService = CustomerService.getInstance();
+        discountContext = new DiscountContext();
 
         setTitle("Đặt hàng");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -79,8 +81,6 @@ public class OrderView extends JFrame {
         JScrollPane scrollPane = new JScrollPane(cartTable);
         scrollPane.setBorder(BorderFactory.createTitledBorder("Danh sách sản phẩm trong giỏ hàng"));
         contentPanel.add(scrollPane, BorderLayout.NORTH);
-
-
 
         // Main info panel
         JPanel infoPanel = new JPanel();
@@ -211,8 +211,6 @@ public class OrderView extends JFrame {
         contentPanel.add(infoPanel, BorderLayout.CENTER);
         add(contentPanel, BorderLayout.CENTER);
 
-
-
         //setid customer
 //        int customerId = Session.getInstance().getId();
         setCustomerId(1);
@@ -272,13 +270,26 @@ public class OrderView extends JFrame {
         int selectedIndex = voucherComboBox.getSelectedIndex();
         double amountAfterLevelDiscount = totalAmount - levelDiscountAmount;
         double voucherDiscount = 0;
+        
         if (selectedIndex > 0) {
             List<IVoucher> vouchers = orderService.getAvailableVouchers();
             if (selectedIndex - 1 < vouchers.size()) {
                 IVoucher selectedVoucher = vouchers.get(selectedIndex - 1);
-                voucherDiscount = selectedVoucher.calculateDiscount(amountAfterLevelDiscount);
+                // Sử dụng DiscountContext để set strategy dựa trên loại voucher
+                if (selectedVoucher instanceof com.bach.model.FixedAmountVoucher) {
+                    discountContext.setStrategy(new FixedAmountDiscountStrategy(
+                        ((com.bach.model.FixedAmountVoucher) selectedVoucher).getAmount()));
+                } else if (selectedVoucher instanceof com.bach.model.PercentageVoucher) {
+                    discountContext.setStrategy(new PercentageDiscountStrategy(
+                        ((com.bach.model.PercentageVoucher) selectedVoucher).getPercentage()));
+                }
+                voucherDiscount = discountContext.calculateDiscount(amountAfterLevelDiscount);
             }
+        } else {
+            // Không có voucher được chọn
+            discountContext.setStrategy(null);
         }
+        
         discountAmount = voucherDiscount;
         discountLabel.setText(String.format("%,.2f VND", discountAmount));
 
